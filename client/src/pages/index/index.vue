@@ -71,8 +71,7 @@ export default {
   methods: {
     async loadJournals() {
       try {
-        const res = await journalApi.getSharedJournals()
-        if (res.code === 0) this.journals = res.data
+        this.journals = await journalApi.getSharedJournals()
       } catch (e) {}
     },
     viewJournal(item) {},

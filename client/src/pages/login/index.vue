@@ -56,17 +56,24 @@ export default {
   },
   methods: {
     async sendCode() {
-      if (this.countdown > 0 || !this.phone) return
+      if (this.countdown > 0) return
+      if (!this.phone || this.phone.length !== 11) {
+        uni.showToast({ title: '请输入11位手机号', icon: 'none' })
+        return
+      }
       try {
         await authApi.sendSmsCode(this.phone)
         uni.showToast({ title: '验证码已发送', icon: 'success' })
         this.countdown = 60
+        this.codeText = `${this.countdown}s`
         this.timer = setInterval(() => {
           this.countdown--
           this.codeText = this.countdown > 0 ? `${this.countdown}s` : '获取验证码'
           if (this.countdown <= 0) clearInterval(this.timer)
         }, 1000)
-      } catch (e) {}
+      } catch (e) {
+        uni.showToast({ title: '发送失败，请重试', icon: 'none' })
+      }
     },
     async handleLogin() {
       if (!this.phone || !this.code) {
@@ -102,21 +109,21 @@ export default {
 </script>
 
 <style scoped>
-.page { min-height: 100vh; background: var(--color-background); display: flex; align-items: center; justify-content: center; }
-.login-card { width: 600rpx; background: var(--color-surface); border-radius: var(--radius-lg); padding: 64rpx 48rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.08); }
-.title { font-size: 48rpx; font-weight: 700; color: var(--color-primary); display: block; text-align: center; }
-.subtitle { font-size: 28rpx; color: var(--color-muted); display: block; text-align: center; margin-top: 8rpx; margin-bottom: 48rpx; }
+.page { min-height: 100vh; background: #F0FDF4; display: flex; align-items: center; justify-content: center; }
+.login-card { width: 600rpx; background: #FFFFFF; border-radius: 32rpx; padding: 64rpx 48rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.08); }
+.title { font-size: 48rpx; font-weight: 700; color: #15803D; display: block; text-align: center; }
+.subtitle { font-size: 28rpx; color: #6B7280; display: block; text-align: center; margin-top: 8rpx; margin-bottom: 48rpx; }
 .form { display: flex; flex-direction: column; gap: 24rpx; }
 .input-group { width: 100%; }
-.input { width: 100%; height: 88rpx; padding: 0 24rpx; border: 2rpx solid var(--color-border); border-radius: var(--radius-sm); font-size: 28rpx; background: #fff; box-sizing: border-box; }
+.input { width: 100%; height: 88rpx; padding: 0 24rpx; border: 2rpx solid #D1D5DB; border-radius: 16rpx; font-size: 28rpx; background: #fff; box-sizing: border-box; }
 .code-group { display: flex; gap: 16rpx; }
 .code-input { flex: 1; }
-.code-btn { width: 200rpx; height: 88rpx; background: var(--color-primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
+.code-btn { width: 200rpx; height: 88rpx; background: #15803D; border-radius: 16rpx; display: flex; align-items: center; justify-content: center; }
 .code-btn-text { color: #fff; font-size: 26rpx; }
-.login-btn { width: 100%; height: 88rpx; background: var(--color-cta); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-top: 16rpx; }
+.login-btn { width: 100%; height: 88rpx; background: #CA8A04; border-radius: 16rpx; display: flex; align-items: center; justify-content: center; margin-top: 16rpx; }
 .login-btn-text { color: #fff; font-size: 30rpx; font-weight: 600; }
 .admin-toggle { text-align: center; margin-top: 24rpx; }
-.admin-toggle-text { font-size: 26rpx; color: var(--color-muted); }
+.admin-toggle-text { font-size: 26rpx; color: #6B7280; }
 .admin-form { margin-top: 16rpx; display: flex; flex-direction: column; gap: 24rpx; }
-.admin-login-btn { background: var(--color-primary); }
+.admin-login-btn { background: #15803D; }
 </style>

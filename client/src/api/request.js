@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.DEV ? '/api/v1' : 'http://localhost:8080/api/v1'
+const BASE_URL = 'http://localhost:8080/api/v1'
 
 function request(options) {
   return new Promise((resolve, reject) => {
@@ -7,6 +7,7 @@ function request(options) {
       url: BASE_URL + options.url,
       method: options.method || 'GET',
       data: options.data,
+      timeout: options.timeout || 10000,
       header: {
         'Content-Type': 'application/json',
         'Authorization': token ? `Bearer ${token}` : '',
@@ -18,10 +19,12 @@ function request(options) {
         } else if (res.data && (res.data.code === 40101 || res.statusCode === 401)) {
           uni.removeStorageSync('token')
           uni.removeStorageSync('userInfo')
-          uni.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
-          setTimeout(() => {
-            uni.navigateTo({ url: '/pages/login/index' })
-          }, 1500)
+          if (token) {
+            uni.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+            setTimeout(() => {
+              uni.navigateTo({ url: '/pages/login/index' })
+            }, 1500)
+          }
           reject(res.data)
         } else if (res.data && res.data.code === 40301) {
           uni.showToast({ title: '权限不足', icon: 'none' })
@@ -33,7 +36,6 @@ function request(options) {
         }
       },
       fail: (err) => {
-        uni.showToast({ title: '网络错误，请检查网络连接', icon: 'none' })
         reject(err)
       }
     })

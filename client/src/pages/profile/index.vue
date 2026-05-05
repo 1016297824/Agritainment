@@ -126,8 +126,8 @@ export default {
 .menu-label { font-size: 28rpx; color: var(--color-text); }
 .logout-label { color: var(--color-error); }
 .menu-arrow { font-size: 32rpx; color: var(--color-muted); }
-.login-prompt { padding: 120rpx 32rpx; text-align: center; }
-.prompt-text { font-size: 28rpx; color: var(--color-muted); display: block; margin-bottom: 32rpx; }
-.login-btn { background: var(--color-primary); padding: 24rpx 64rpx; border-radius: var(--radius-sm); display: inline-block; }
+.login-prompt { padding: 120rpx 32rpx; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.prompt-text { font-size: 28rpx; color: #6B7280; display: block; margin-bottom: 32rpx; }
+.login-btn { background: #15803D; padding: 24rpx 64rpx; border-radius: 16rpx; }
 .login-btn-text { color: #fff; font-size: 30rpx; font-weight: 600; }
 </style>
