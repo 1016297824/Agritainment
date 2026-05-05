@@ -66,7 +66,7 @@ class DiningServiceStockTest {
         dish = new Dish();
         dish.setId(10L);
         dish.setName("红烧肉");
-        dish.setPrice(38.0);
+        dish.setPrice(new java.math.BigDecimal("38.0"));
         dish.setIsAvailable(true);
         dish.setRemainingStock(5);
         dish.setVersion(0);
@@ -91,14 +91,14 @@ class DiningServiceStockTest {
                 return 1;
             });
             when(dishMapper.selectBatchIds(anyList())).thenReturn(List.of(dish));
-            when(dishMapper.update(isNull(), any(LambdaUpdateWrapper.class))).thenReturn(1);
+            when(dishMapper.updateById(any(Dish.class))).thenReturn(1);
             when(orderItemMapper.insert(any(OrderItem.class))).thenReturn(1);
             when(orderMapper.selectById(100L)).thenReturn(new Order());
 
             Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
 
             assertThat(result).isNotNull();
-            verify(dishMapper).update(isNull(), any(LambdaUpdateWrapper.class));
+            verify(dishMapper).updateById(any(Dish.class));
         }
 
         @Test
@@ -112,7 +112,7 @@ class DiningServiceStockTest {
                 return 1;
             });
             when(dishMapper.selectBatchIds(anyList())).thenReturn(List.of(dish));
-            when(dishMapper.update(isNull(), any(LambdaUpdateWrapper.class))).thenReturn(0);
+            when(dishMapper.updateById(any(Dish.class))).thenReturn(0);
 
             assertThatThrownBy(() -> diningService.createOrder(1L, "QR_A1", List.of(orderItem)))
                     .isInstanceOf(AppException.class)
@@ -138,7 +138,7 @@ class DiningServiceStockTest {
             Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
 
             assertThat(result).isNotNull();
-            verify(dishMapper, never()).update(any(), any(LambdaUpdateWrapper.class));
+            verify(dishMapper, never()).updateById(any(Dish.class));
             verify(orderItemMapper, never()).insert(any());
         }
 
@@ -160,7 +160,7 @@ class DiningServiceStockTest {
             Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
 
             assertThat(result).isNotNull();
-            verify(dishMapper, never()).update(any(), any(LambdaUpdateWrapper.class));
+            verify(dishMapper, never()).updateById(any(Dish.class));
             verify(orderItemMapper).insert(any(OrderItem.class));
         }
 
@@ -185,7 +185,7 @@ class DiningServiceStockTest {
             when(tableMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(table);
             when(orderMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(existingOrder);
             when(dishMapper.selectBatchIds(anyList())).thenReturn(List.of(dish));
-            when(dishMapper.update(isNull(), any(LambdaUpdateWrapper.class))).thenReturn(1);
+            when(dishMapper.updateById(any(Dish.class))).thenReturn(1);
             when(orderItemMapper.insert(any(OrderItem.class))).thenReturn(1);
             when(orderMapper.selectById(100L)).thenReturn(existingOrder);
 
