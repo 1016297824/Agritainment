@@ -62,10 +62,12 @@
         <text class="login-btn-text">立即登录</text>
       </view>
     </view>
+    <CustomTabBar :current="4" />
   </view>
 </template>
 
 <script>
+import CustomTabBar from '@/components/CustomTabBar.vue'
 import { useAuthStore } from '@/stores/auth'
 import { membershipApi } from '@/api'
 

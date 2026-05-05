@@ -31,10 +31,12 @@
         </view>
       </view>
     </view>
+    <CustomTabBar :current="2" />
   </view>
 </template>
 
 <script>
+import CustomTabBar from '@/components/CustomTabBar.vue'
 import { productApi } from '@/api'
 
 export default {

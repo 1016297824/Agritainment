@@ -53,10 +53,12 @@
         </view>
       </view>
     </view>
+    <CustomTabBar :current="0" />
   </view>
 </template>
 
 <script>
+import CustomTabBar from '@/components/CustomTabBar.vue'
 import { journalApi } from '@/api'
 
 export default {

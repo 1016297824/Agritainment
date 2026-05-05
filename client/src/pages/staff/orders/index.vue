@@ -28,10 +28,12 @@
         <text>暂无活跃订单</text>
       </view>
     </view>
+    <CustomTabBar :current="3" />
   </view>
 </template>
 
 <script setup>
+import CustomTabBar from '@/components/CustomTabBar.vue'
 import { ref, onMounted } from 'vue'
 import { diningApi } from '@/api'
 

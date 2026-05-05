@@ -26,10 +26,12 @@
         <text>赠送产品: {{ (memberConfig.gift_product_ids || []).length }}个</text>
       </view>
     </view>
+    <CustomTabBar :current="3" />
   </view>
 </template>
 
 <script setup>
+import CustomTabBar from '@/components/CustomTabBar.vue'
 import { ref, onMounted } from 'vue'
 import { adminApi, membershipApi, plantingApi } from '@/api'
 
