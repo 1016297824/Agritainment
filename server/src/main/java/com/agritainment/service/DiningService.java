@@ -153,7 +153,7 @@ public class DiningService {
             oi.setDishId(item.getDishId());
             oi.setQuantity(item.getQuantity());
             oi.setPrice(dish.getPrice());
-            oi.setStatus("active");
+            oi.setStatus("pending");
             orderItemMapper.insert(oi);
         }
 

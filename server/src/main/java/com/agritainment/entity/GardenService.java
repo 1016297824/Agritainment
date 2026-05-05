@@ -12,6 +12,7 @@ public class GardenService {
     private String name;
     private Double price;
     private String description;
+    @TableField("is_available")
     private Boolean isAvailable;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;

@@ -17,6 +17,7 @@ public class Product {
     private String description;
     private Integer dailyQuota;
     private Integer remainingQuota;
+    @TableField("is_available")
     private Boolean isAvailable;
     @Version
     private Integer version;

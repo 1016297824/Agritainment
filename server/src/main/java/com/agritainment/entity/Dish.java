@@ -14,6 +14,7 @@ public class Dish {
     private String imageUrl;
     private String description;
     private Integer remainingStock;
+    @TableField("is_available")
     private Boolean isAvailable;
     @Version
     private Integer version;
