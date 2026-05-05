@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class AdminService {
         return user;
     }
 
-    public Dish createDish(String name, Double price, String imageUrl, String description, Integer remainingStock) {
+    public Dish createDish(String name, BigDecimal price, String imageUrl, String description, Integer remainingStock) {
         Dish dish = new Dish();
         dish.setName(name);
         dish.setPrice(price);
@@ -91,7 +92,7 @@ public class AdminService {
         return dish;
     }
 
-    public Dish updateDish(Long id, String name, Double price, String imageUrl, String description, Integer remainingStock, Boolean isAvailable) {
+    public Dish updateDish(Long id, String name, BigDecimal price, String imageUrl, String description, Integer remainingStock, Boolean isAvailable) {
         Dish dish = dishMapper.selectById(id);
         if (dish == null) throw new AppException(40110, "菜品不存在");
         if (name != null) dish.setName(name);
@@ -110,7 +111,7 @@ public class AdminService {
         dishMapper.deleteById(id);
     }
 
-    public Product createProduct(String name, String type, Double price, Double memberPrice, String imageUrl, String description, Integer dailyQuota) {
+    public Product createProduct(String name, String type, BigDecimal price, BigDecimal memberPrice, String imageUrl, String description, Integer dailyQuota) {
         Product product = new Product();
         product.setName(name);
         product.setType(type);
@@ -125,7 +126,7 @@ public class AdminService {
         return product;
     }
 
-    public Product updateProduct(Long id, String name, String type, Double price, Double memberPrice, String imageUrl, String description, Integer dailyQuota, Boolean isAvailable) {
+    public Product updateProduct(Long id, String name, String type, BigDecimal price, BigDecimal memberPrice, String imageUrl, String description, Integer dailyQuota, Boolean isAvailable) {
         Product product = productMapper.selectById(id);
         if (product == null) throw new AppException(40101, "产品不存在");
         if (name != null) product.setName(name);

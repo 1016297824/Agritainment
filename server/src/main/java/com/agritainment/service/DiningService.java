@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -128,7 +129,7 @@ public class DiningService {
             order = new Order();
             order.setTableId(table.getId());
             order.setUserId(userId);
-            order.setTotalAmount(0.0);
+            order.setTotalAmount(BigDecimal.ZERO);
             order.setStatus("active");
             orderMapper.insert(order);
             tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, table.getId()).set(DiningTable::getStatus, "dining"));
@@ -142,11 +143,10 @@ public class DiningService {
             Dish dish = dishMap.get(item.getDishId());
             if (dish == null || !dish.getIsAvailable()) continue;
             if (dish.getRemainingStock() != null && dish.getRemainingStock() > 0) {
-                int updated = dishMapper.update(null, new LambdaUpdateWrapper<Dish>()
-                        .eq(Dish::getId, dish.getId())
-                        .gt(Dish::getRemainingStock, item.getQuantity() - 1)
-                        .setSql("remaining_stock = remaining_stock - " + item.getQuantity()));
-                if (updated == 0) throw new AppException(40010, "菜品\"" + dish.getName() + "\"库存不足");
+                if (dish.getRemainingStock() < item.getQuantity()) throw new AppException(40010, "菜品\"" + dish.getName() + "\"库存不足");
+                dish.setRemainingStock(dish.getRemainingStock() - item.getQuantity());
+                int updated = dishMapper.updateById(dish);
+                if (updated == 0) throw new AppException(40010, "菜品\"" + dish.getName() + "\"库存不足，请重试");
             }
             OrderItem oi = new OrderItem();
             oi.setOrderId(order.getId());
@@ -241,7 +241,9 @@ public class DiningService {
 
     private void recalcOrderTotal(Long orderId) {
         List<OrderItem> items = orderItemMapper.selectList(new LambdaQueryWrapper<OrderItem>().eq(OrderItem::getOrderId, orderId).ne(OrderItem::getStatus, "refunded"));
-        double total = items.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
+        BigDecimal total = items.stream()
+                .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         orderMapper.update(null, new LambdaUpdateWrapper<Order>().eq(Order::getId, orderId).set(Order::getTotalAmount, total));
     }
 }

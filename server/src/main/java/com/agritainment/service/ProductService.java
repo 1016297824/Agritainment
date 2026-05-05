@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.math.BigDecimal;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ProductService {
             throw new AppException(40103, "产品已售罄");
 
         User user = userMapper.selectById(userId);
-        double price = Boolean.TRUE.equals(user.getIsMember()) && product.getMemberPrice() != null ? product.getMemberPrice() : product.getPrice();
+        BigDecimal price = Boolean.TRUE.equals(user.getIsMember()) && product.getMemberPrice() != null ? product.getMemberPrice() : product.getPrice();
 
         String code = userService.generateCouponCode();
         Coupon coupon = new Coupon();
@@ -57,10 +58,10 @@ public class ProductService {
         couponMapper.insert(coupon);
 
         if (product.getRemainingQuota() != null && product.getRemainingQuota() != -1) {
-            int updated = productMapper.update(null, new LambdaUpdateWrapper<Product>()
-                    .eq(Product::getId, productId).gt(Product::getRemainingQuota, 0)
-                    .setSql("remaining_quota = remaining_quota - 1"));
-            if (updated == 0) throw new AppException(40103, "产品已售罄");
+            if (product.getRemainingQuota() <= 0) throw new AppException(40103, "产品已售罄");
+            product.setRemainingQuota(product.getRemainingQuota() - 1);
+            int updated = productMapper.updateById(product);
+            if (updated == 0) throw new AppException(40103, "产品已售罄，请重试");
         }
         return coupon;
     }

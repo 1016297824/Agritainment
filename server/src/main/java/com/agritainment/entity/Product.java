@@ -2,6 +2,7 @@ package com.agritainment.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,8 +12,8 @@ public class Product {
     private Long id;
     private String name;
     private String type;
-    private Double price;
-    private Double memberPrice;
+    private BigDecimal price;
+    private BigDecimal memberPrice;
     private String imageUrl;
     private String description;
     private Integer dailyQuota;

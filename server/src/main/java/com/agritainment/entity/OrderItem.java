@@ -2,6 +2,7 @@ package com.agritainment.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,7 +13,7 @@ public class OrderItem {
     private Long orderId;
     private Long dishId;
     private Integer quantity;
-    private Double price;
+    private BigDecimal price;
     private String status;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;

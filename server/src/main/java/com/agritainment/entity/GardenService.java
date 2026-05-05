@@ -2,6 +2,7 @@ package com.agritainment.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,7 +11,7 @@ public class GardenService {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;
-    private Double price;
+    private BigDecimal price;
     private String description;
     @TableField("is_available")
     private Boolean isAvailable;

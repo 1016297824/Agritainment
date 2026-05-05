@@ -1,13 +1,14 @@
 package com.agritainment.dto;
 
 import lombok.Data;
+import java.math.BigDecimal;
 
 @Data
 public class UpdateProductRequest {
     private String name;
     private String type;
-    private Double price;
-    private Double member_price;
+    private BigDecimal price;
+    private BigDecimal member_price;
     private String image_url;
     private String description;
     private Integer daily_quota;
