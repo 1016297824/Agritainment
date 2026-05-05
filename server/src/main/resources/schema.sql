@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `tables` (
 -- 菜品表
 CREATE TABLE IF NOT EXISTS dishes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     price DECIMAL(10,2) NOT NULL,
     image_url VARCHAR(255),
     description TEXT,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 -- 产品表
 CREATE TABLE IF NOT EXISTS products (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     `type` ENUM('physical','service') NOT NULL DEFAULT 'physical',
     price DECIMAL(10,2) NOT NULL,
     member_price DECIMAL(10,2),
@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS camera_queue (
 -- 种植管理服务表
 CREATE TABLE IF NOT EXISTS garden_services (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     price DECIMAL(10,2) NOT NULL,
     description TEXT,
     is_available BOOLEAN DEFAULT TRUE,
