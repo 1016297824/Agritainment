@@ -1,7 +1,28 @@
+node_modules/
+dist/
+.env
+uploads/*
+!uploads/.gitkeep
+*.log
+.DS_Store
+Thumbs.db
 
-# Trae IDE
+server/target/
+
+.specify/
 .trae/
 
-# Specify
-.specify/
+__pycache__/
+*.pyc
 
+*.class
+*.jar
+*.war
+
+.idea/
+*.iml
+.vscode/
+
+*.swp
+*.swo
+*~

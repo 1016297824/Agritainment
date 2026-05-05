@@ -1,0 +1,45 @@
+{
+  "pages": [
+    { "path": "pages/index/index", "style": { "navigationBarTitleText": "农家乐" } },
+    { "path": "pages/dining/index", "style": { "navigationBarTitleText": "餐饮" } },
+    { "path": "pages/products/index", "style": { "navigationBarTitleText": "产品服务" } },
+    { "path": "pages/planting/index", "style": { "navigationBarTitleText": "种植体验" } },
+    { "path": "pages/profile/index", "style": { "navigationBarTitleText": "我的" } },
+    { "path": "pages/login/index", "style": { "navigationBarTitleText": "登录" } },
+    { "path": "pages/staff/scan/index", "style": { "navigationBarTitleText": "扫码核销" } },
+    { "path": "pages/staff/reservations/index", "style": { "navigationBarTitleText": "预约管理" } },
+    { "path": "pages/staff/orders/index", "style": { "navigationBarTitleText": "订单管理" } },
+    { "path": "pages/admin/dashboard/index", "style": { "navigationBarTitleText": "管理后台" } },
+    { "path": "pages/admin/users/index", "style": { "navigationBarTitleText": "人员管理" } },
+    { "path": "pages/admin/business/index", "style": { "navigationBarTitleText": "业务管理" } },
+    { "path": "pages/admin/system/index", "style": { "navigationBarTitleText": "系统管理" } },
+    { "path": "pages/profile/coupons/index", "style": { "navigationBarTitleText": "我的卡包" } },
+    { "path": "pages/profile/journals/index", "style": { "navigationBarTitleText": "种植日志" } },
+    { "path": "pages/profile/reservations/index", "style": { "navigationBarTitleText": "我的预约" } },
+    { "path": "pages/dining/order/index", "style": { "navigationBarTitleText": "扫码点餐" } },
+    { "path": "pages/products/detail", "style": { "navigationBarTitleText": "产品详情" } },
+    { "path": "pages/products/reservation/index", "style": { "navigationBarTitleText": "服务预约" } },
+    { "path": "pages/planting/plot-detail", "style": { "navigationBarTitleText": "地块详情" } },
+    { "path": "pages/planting/service-order", "style": { "navigationBarTitleText": "种植服务下单" } },
+    { "path": "pages/profile/journal/edit", "style": { "navigationBarTitleText": "编辑日志" } }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "农家乐",
+    "navigationBarBackgroundColor": "#15803D",
+    "backgroundColor": "#F0FDF4"
+  },
+  "tabBar": {
+    "color": "#6B7280",
+    "selectedColor": "#15803D",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "static/tab-home.png", "selectedIconPath": "static/tab-home-active.png" },
+      { "pagePath": "pages/dining/index", "text": "餐饮", "iconPath": "static/tab-dining.png", "selectedIconPath": "static/tab-dining-active.png" },
+      { "pagePath": "pages/products/index", "text": "产品", "iconPath": "static/tab-products.png", "selectedIconPath": "static/tab-products-active.png" },
+      { "pagePath": "pages/planting/index", "text": "种植", "iconPath": "static/tab-planting.png", "selectedIconPath": "static/tab-planting-active.png" },
+      { "pagePath": "pages/profile/index", "text": "我的", "iconPath": "static/tab-profile.png", "selectedIconPath": "static/tab-profile-active.png" }
+    ]
+  }
+}

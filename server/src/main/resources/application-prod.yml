@@ -1,0 +1,7 @@
+app:
+  cors:
+    allowed-origins: "https://servicewechat.com"
+
+logging:
+  level:
+    com.agritainment: INFO

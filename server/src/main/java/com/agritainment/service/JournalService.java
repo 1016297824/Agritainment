@@ -1,0 +1,66 @@
+package com.agritainment.service;
+
+import com.agritainment.common.AppException;
+import com.agritainment.entity.Journal;
+import com.agritainment.mapper.JournalMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class JournalService {
+
+    private final JournalMapper journalMapper;
+
+    public List<Journal> getJournals(Long userId) {
+        return journalMapper.selectList(new LambdaQueryWrapper<Journal>()
+                .eq(Journal::getUserId, userId).orderByDesc(Journal::getCreatedAt));
+    }
+
+    public List<Journal> getSharedJournals() {
+        return journalMapper.selectList(new LambdaQueryWrapper<Journal>()
+                .eq(Journal::getIsShared, true).orderByDesc(Journal::getCreatedAt));
+    }
+
+    public Journal createJournal(Long userId, String title, String content, String images) {
+        Journal journal = new Journal();
+        journal.setUserId(userId);
+        journal.setTitle(title);
+        journal.setContent(content);
+        journal.setImages(images);
+        journal.setIsShared(false);
+        journalMapper.insert(journal);
+        return journal;
+    }
+
+    public Journal updateJournal(Long userId, Long id, String title, String content, String images) {
+        Journal journal = journalMapper.selectById(id);
+        if (journal == null || !journal.getUserId().equals(userId))
+            throw new AppException(40501, "日记不存在");
+        journal.setTitle(title);
+        journal.setContent(content);
+        journal.setImages(images);
+        journalMapper.updateById(journal);
+        return journal;
+    }
+
+    public void shareJournal(Long userId, Long id) {
+        Journal journal = journalMapper.selectById(id);
+        if (journal == null || !journal.getUserId().equals(userId))
+            throw new AppException(40501, "日记不存在");
+        journalMapper.update(null, new LambdaUpdateWrapper<Journal>()
+                .eq(Journal::getId, id).set(Journal::getIsShared, true));
+    }
+
+    public void unshareJournal(Long userId, Long id) {
+        Journal journal = journalMapper.selectById(id);
+        if (journal == null || !journal.getUserId().equals(userId))
+            throw new AppException(40501, "日记不存在");
+        journalMapper.update(null, new LambdaUpdateWrapper<Journal>()
+                .eq(Journal::getId, id).set(Journal::getIsShared, false));
+    }
+}
