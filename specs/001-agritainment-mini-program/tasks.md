@@ -111,7 +111,7 @@
 - [ ] T052 实现微信支付集成 (预留接口)
 - [ ] T053 实现微信模板消息/订阅消息
 - [ ] T054 实现定时任务 (每日库存重置、预约超时处理)
-- [x] T055 实现前端 TabBar 导航 (CustomTabBar + 角色切换)
+- [x] T055 实现前端 TabBar 导航 (原生 tabBar + 角色切换)
 - [ ] T056 配置 Nginx 反向代理和静态文件服务
 - [x] T057 种子数据脚本 (data.sql + INSERT IGNORE)
 - [x] T058 前端全局组件注册和页面路由配置
@@ -123,6 +123,8 @@
 
 - [x] T060 实现角色 TabBar 切换工具 client/src/utils/tabBar.js
 - [x] T061 更新 auth store 添加角色切换后跳转逻辑 client/src/stores/auth.js
+- [ ] T065 创建管理员独立登录页面 client/src/pages/admin/login/index.vue
+- [ ] T066 修改客户登录页，管理员登录改为跳转链接 client/src/pages/login/index.vue
 - [x] T062 实现员工扫码核销页面 client/src/pages/staff/scan/index.vue
 - [x] T063 实现员工预约管理页面 client/src/pages/staff/reservations/index.vue
 - [x] T064 实现员工订单管理页面 client/src/pages/staff/orders/index.vue
@@ -142,7 +144,8 @@
 - [x] TD-001 新增 GET /planting/plots/:id 和 GET /journals/:id 详情接口
 - [x] TD-002 新增 GET /planting/service-orders 服务预约查询接口
 - [x] TD-006 IndexInitializer 应用启动时自动创建缺失索引
-- [x] TD-003 CustomTabBar 组件支持 customer/staff/admin 角色切换
+- [x] TD-003 CustomTabBar/AppTabBar 组件已移除，改用微信原生 tabBar
+- [x] TD-012 修复 pages.json tabBar.list 超出微信 5 项限制：仅保留客户角色 5 个 tab + 图标。自定义 TabBar 方案因微信渲染层级问题不可用，已回退到原生 tabBar。员工/管理员页面通过 uni.navigateTo/reLaunch 访问
 - [x] TD-011 管理后台页面 (dashboard/users/business/system)
 - [~] TD-007 图片上传 OSS (暂不处理，MVP 单机部署足够)
 

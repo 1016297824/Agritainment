@@ -28,12 +28,10 @@
         <button class="manual-btn" @tap="verifyManual">核销</button>
       </view>
     </view>
-    <CustomTabBar :current="1" />
   </view>
 </template>
 
 <script setup>
-import CustomTabBar from '@/components/CustomTabBar.vue'
 import { ref } from 'vue'
 import { couponApi } from '@/api'
 

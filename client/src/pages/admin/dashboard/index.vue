@@ -37,12 +37,10 @@
         <text class="menu-text">系统管理</text>
       </view>
     </view>
-    <CustomTabBar :current="1" />
   </view>
 </template>
 
 <script setup>
-import CustomTabBar from '@/components/CustomTabBar.vue'
 import { ref, onMounted } from 'vue'
 import { adminApi } from '@/api'
 

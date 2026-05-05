@@ -22,6 +22,18 @@ const adminTabs = [
   { pagePath: '/pages/profile/index', text: '我的' }
 ]
 
+const tabBarPages = new Set([
+  '/pages/index/index',
+  '/pages/dining/index',
+  '/pages/products/index',
+  '/pages/planting/index',
+  '/pages/profile/index'
+])
+
+export function isTabBarPage(path) {
+  return tabBarPages.has(path)
+}
+
 export function getRoleTabs(role) {
   switch (role) {
     case 'admin': return adminTabs

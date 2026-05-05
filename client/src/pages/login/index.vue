@@ -18,20 +18,8 @@
           <text class="login-btn-text">登录 / 注册</text>
         </view>
 
-        <view class="admin-toggle" @tap="showAdmin = !showAdmin">
-          <text class="admin-toggle-text">{{ showAdmin ? '收起管理员登录' : '管理员登录' }}</text>
-        </view>
-
-        <view v-if="showAdmin" class="admin-form">
-          <view class="input-group">
-            <input class="input" v-model="adminPhone" type="number" maxlength="11" placeholder="管理员手机号" />
-          </view>
-          <view class="input-group">
-            <input class="input" v-model="adminPassword" type="text" placeholder="密码" />
-          </view>
-          <view class="login-btn admin-login-btn" @tap="handleAdminLogin">
-            <text class="login-btn-text">管理员登录</text>
-          </view>
+        <view class="admin-link" @tap="goAdminLogin">
+          <text class="admin-link-text">管理员登录</text>
         </view>
       </view>
     </view>
@@ -48,10 +36,7 @@ export default {
       phone: '',
       code: '',
       codeText: '获取验证码',
-      countdown: 0,
-      showAdmin: false,
-      adminPhone: '',
-      adminPassword: ''
+      countdown: 0
     }
   },
   methods: {
@@ -92,17 +77,8 @@ export default {
         } catch (e2) {}
       }
     },
-    async handleAdminLogin() {
-      if (!this.adminPhone || !this.adminPassword) {
-        uni.showToast({ title: '请输入手机号和密码', icon: 'none' })
-        return
-      }
-      try {
-        const store = useAuthStore()
-        await store.adminLogin(this.adminPhone, this.adminPassword)
-      } catch (e) {
-        uni.showToast({ title: e.message || '登录失败', icon: 'none' })
-      }
+    goAdminLogin() {
+      uni.navigateTo({ url: '/pages/admin/login/index' })
     }
   }
 }
@@ -122,8 +98,6 @@ export default {
 .code-btn-text { color: #fff; font-size: 26rpx; }
 .login-btn { width: 100%; height: 88rpx; background: #CA8A04; border-radius: 16rpx; display: flex; align-items: center; justify-content: center; margin-top: 16rpx; }
 .login-btn-text { color: #fff; font-size: 30rpx; font-weight: 600; }
-.admin-toggle { text-align: center; margin-top: 24rpx; }
-.admin-toggle-text { font-size: 26rpx; color: #6B7280; }
-.admin-form { margin-top: 16rpx; display: flex; flex-direction: column; gap: 24rpx; }
-.admin-login-btn { background: #15803D; }
+.admin-link { text-align: center; margin-top: 24rpx; }
+.admin-link-text { font-size: 26rpx; color: #6B7280; }
 </style>

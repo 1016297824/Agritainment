@@ -35,12 +35,10 @@
         </view>
       </view>
     </view>
-    <CustomTabBar :current="1" />
   </view>
 </template>
 
 <script>
-import CustomTabBar from '@/components/CustomTabBar.vue'
 import { diningApi } from '@/api'
 
 export default {

@@ -42,12 +42,10 @@
         </view>
       </view>
     </view>
-    <CustomTabBar :current="2" />
   </view>
 </template>
 
 <script setup>
-import CustomTabBar from '@/components/CustomTabBar.vue'
 import { ref, onMounted } from 'vue'
 import { adminApi, diningApi, productApi } from '@/api'
 

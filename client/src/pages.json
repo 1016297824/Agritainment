@@ -12,6 +12,7 @@
     { "path": "pages/admin/users/index", "style": { "navigationBarTitleText": "人员管理" } },
     { "path": "pages/admin/business/index", "style": { "navigationBarTitleText": "业务管理" } },
     { "path": "pages/admin/system/index", "style": { "navigationBarTitleText": "系统管理" } },
+    { "path": "pages/admin/login/index", "style": { "navigationBarTitleText": "管理员登录" } },
     { "path": "pages/login/index", "style": { "navigationBarTitleText": "登录" } },
     { "path": "pages/profile/coupons/index", "style": { "navigationBarTitleText": "我的卡包" } },
     { "path": "pages/profile/journals/index", "style": { "navigationBarTitleText": "种植日志" } },
@@ -30,23 +31,16 @@
     "backgroundColor": "#F0FDF4"
   },
   "tabBar": {
-    "custom": true,
     "color": "#6B7280",
     "selectedColor": "#15803D",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [
-      { "pagePath": "pages/index/index", "text": "首页" },
-      { "pagePath": "pages/dining/index", "text": "餐饮" },
-      { "pagePath": "pages/products/index", "text": "产品" },
-      { "pagePath": "pages/planting/index", "text": "种植" },
-      { "pagePath": "pages/profile/index", "text": "我的" },
-      { "pagePath": "pages/staff/scan/index", "text": "扫码" },
-      { "pagePath": "pages/staff/reservations/index", "text": "预约" },
-      { "pagePath": "pages/staff/orders/index", "text": "订单" },
-      { "pagePath": "pages/admin/dashboard/index", "text": "管理" },
-      { "pagePath": "pages/admin/business/index", "text": "业务" },
-      { "pagePath": "pages/admin/system/index", "text": "系统" }
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "static/tab-home.png", "selectedIconPath": "static/tab-home-active.png" },
+      { "pagePath": "pages/dining/index", "text": "餐饮", "iconPath": "static/tab-dining.png", "selectedIconPath": "static/tab-dining-active.png" },
+      { "pagePath": "pages/products/index", "text": "产品", "iconPath": "static/tab-products.png", "selectedIconPath": "static/tab-products-active.png" },
+      { "pagePath": "pages/planting/index", "text": "种植", "iconPath": "static/tab-planting.png", "selectedIconPath": "static/tab-planting-active.png" },
+      { "pagePath": "pages/profile/index", "text": "我的", "iconPath": "static/tab-profile.png", "selectedIconPath": "static/tab-profile-active.png" }
     ]
   }
 }
