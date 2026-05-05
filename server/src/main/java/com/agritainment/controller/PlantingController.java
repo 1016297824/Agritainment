@@ -53,6 +53,12 @@ public class PlantingController {
         return Result.ok(plantingService.createServiceOrder(userId, request.getPlot_id(), request.getService_id(), request.getCoupon_id()));
     }
 
+    @GetMapping("/service-orders")
+    @RequireRole({"customer", "staff", "admin"})
+    public Result<List<GardenServiceOrder>> getServiceOrders(@RequestAttribute("userId") Long userId) {
+        return Result.ok(plantingService.getServiceOrders(userId));
+    }
+
     @GetMapping("/cameras/{id}/status")
     @RequireRole({"customer", "staff", "admin"})
     public Result<Map<String, Object>> getCameraStatus(@PathVariable Long id) {

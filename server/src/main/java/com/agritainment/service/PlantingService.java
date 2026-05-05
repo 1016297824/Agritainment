@@ -96,6 +96,11 @@ public class PlantingService {
         return order;
     }
 
+    public List<GardenServiceOrder> getServiceOrders(Long userId) {
+        return gardenServiceOrderMapper.selectList(new LambdaQueryWrapper<GardenServiceOrder>()
+                .eq(GardenServiceOrder::getUserId, userId).orderByDesc(GardenServiceOrder::getCreatedAt));
+    }
+
     public Camera createCamera(String identifier, String name, String ipAddress) {
         Camera camera = new Camera();
         camera.setIdentifier(identifier);

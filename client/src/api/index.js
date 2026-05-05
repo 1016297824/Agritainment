@@ -55,6 +55,7 @@ export const plantingApi = {
   rentPlot: (id) => post(`/planting/plots/${id}/rent`),
   getGardenServices: () => get('/planting/garden-services'),
   createServiceOrder: (plot_id, service_id, coupon_id) => post('/planting/service-orders', { plot_id, service_id, coupon_id }),
+  getServiceOrders: () => get('/planting/service-orders'),
   completeServiceOrder: (id) => post(`/planting/service-orders/${id}/complete`),
   getCameraStatus: (id) => get(`/planting/cameras/${id}/status`),
   controlCamera: (id, action, speed) => post(`/planting/cameras/${id}/control`, { action, speed }),

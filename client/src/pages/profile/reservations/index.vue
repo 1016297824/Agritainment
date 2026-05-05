@@ -29,14 +29,11 @@
       </view>
       <view v-for="item in serviceList" :key="item.id" class="reservation-card">
         <view class="res-info">
-          <text class="res-date">{{ item.date }}</text>
-          <text class="res-product">{{ item.product?.name || '' }}</text>
+          <text class="res-date">{{ item.createdAt ? item.createdAt.substring(0, 10) : '' }}</text>
+          <text class="res-product">{{ item.service?.name || 'service #' + item.serviceId }}</text>
         </view>
         <view class="res-right">
-          <text class="res-status" :class="item.status">{{ serviceStatusMap[item.status] }}</text>
-          <view v-if="item.status === 'pending'" class="cancel-btn" @tap="cancelService(item.id)">
-            <text class="cancel-text">取消</text>
-          </view>
+          <text class="res-status" :class="item.status">{{ serviceStatusMap[item.status] || item.status }}</text>
         </view>
       </view>
     </view>
@@ -45,7 +42,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { diningApi, couponApi } from '@/api'
+import { diningApi, plantingApi } from '@/api'
 
 const activeTab = ref('dining')
 const diningList = ref([])
@@ -61,14 +58,7 @@ const loadDining = async () => {
 
 const loadService = async () => {
   try {
-    const coupons = await couponApi.getCoupons()
-    const lockedCoupons = coupons.filter(c => c.status === 'locked')
-    serviceList.value = lockedCoupons.map(c => ({
-      id: c.id,
-      date: c.service_date || '',
-      product: c.Product,
-      status: 'pending'
-    }))
+    serviceList.value = await plantingApi.getServiceOrders()
   } catch (e) {}
 }
 
@@ -92,22 +82,6 @@ const cancelDining = (id) => {
           await diningApi.cancelReservation(id)
           uni.showToast({ title: '已取消', icon: 'success' })
           loadDining()
-        } catch (err) {}
-      }
-    }
-  })
-}
-
-const cancelService = (id) => {
-  uni.showModal({
-    title: '确认取消',
-    content: '距离预约6小时内取消将计爽约',
-    success: async (e) => {
-      if (e.confirm) {
-        try {
-          await couponApi.cancelServiceReservation(id)
-          uni.showToast({ title: '已取消', icon: 'success' })
-          loadService()
         } catch (err) {}
       }
     }
