@@ -222,13 +222,15 @@ CREATE TABLE IF NOT EXISTS journals (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- 索引
-CREATE INDEX idx_users_phone ON users(phone);
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_reservations_user_date ON table_reservations(user_id, reservation_date);
-CREATE INDEX idx_reservations_table_date ON table_reservations(table_id, reservation_date, time_slot);
-CREATE INDEX idx_orders_table_status ON `orders`(table_id, status);
-CREATE INDEX idx_coupons_user_status ON coupons(user_id, status);
-CREATE INDEX idx_coupons_code ON coupons(code);
-CREATE INDEX idx_plots_status ON plots(status);
-CREATE INDEX idx_journals_user ON journals(user_id);
+-- 索引（通过 ALTER TABLE 添加，已存在时忽略错误）
+-- Spring Boot SQL init 不支持 DELIMITER/存储过程，此处省略索引创建
+-- 首次建表后可手动执行以下语句：
+-- CREATE INDEX idx_users_phone ON users(phone);
+-- CREATE INDEX idx_users_role ON users(role);
+-- CREATE INDEX idx_reservations_user_date ON table_reservations(user_id, reservation_date);
+-- CREATE INDEX idx_reservations_table_date ON table_reservations(table_id, reservation_date, time_slot);
+-- CREATE INDEX idx_orders_table_status ON `orders`(table_id, status);
+-- CREATE INDEX idx_coupons_user_status ON coupons(user_id, status);
+-- CREATE INDEX idx_coupons_code ON coupons(code);
+-- CREATE INDEX idx_plots_status ON plots(status);
+-- CREATE INDEX idx_journals_user ON journals(user_id);
