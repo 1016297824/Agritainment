@@ -25,6 +25,12 @@ public class JournalController {
         return Result.ok(journalService.getJournals(userId));
     }
 
+    @GetMapping("/{id}")
+    @RequireRole({"customer", "staff", "admin"})
+    public Result<Journal> getJournal(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
+        return Result.ok(journalService.getJournal(userId, id));
+    }
+
     @GetMapping("/shared")
     public Result<List<Journal>> getSharedJournals() {
         return Result.ok(journalService.getSharedJournals());

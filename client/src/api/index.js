@@ -51,6 +51,7 @@ export const membershipApi = {
 
 export const plantingApi = {
   getPlots: () => get('/planting/plots'),
+  getPlot: (id) => get(`/planting/plots/${id}`),
   rentPlot: (id) => post(`/planting/plots/${id}/rent`),
   getGardenServices: () => get('/planting/garden-services'),
   createServiceOrder: (plot_id, service_id, coupon_id) => post('/planting/service-orders', { plot_id, service_id, coupon_id }),
@@ -65,6 +66,7 @@ export const plantingApi = {
 
 export const journalApi = {
   getJournals: () => get('/journals'),
+  getJournal: (id) => get(`/journals/${id}`),
   getSharedJournals: () => get('/journals/shared'),
   createJournal: (title, content, images) => post('/journals', { title, content, images }),
   updateJournal: (id, title, content, images) => put(`/journals/${id}`, { title, content, images }),

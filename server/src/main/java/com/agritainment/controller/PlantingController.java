@@ -29,6 +29,11 @@ public class PlantingController {
         return Result.ok(plantingService.getPlots());
     }
 
+    @GetMapping("/plots/{id}")
+    public Result<Plot> getPlot(@PathVariable Long id) {
+        return Result.ok(plantingService.getPlot(id));
+    }
+
     @PostMapping("/plots/{id}/rent")
     @RequireRole({"customer", "staff", "admin"})
     public Result<Plot> rentPlot(@RequestAttribute("userId") Long userId, @PathVariable Long id) {

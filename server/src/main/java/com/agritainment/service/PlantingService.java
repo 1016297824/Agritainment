@@ -29,6 +29,12 @@ public class PlantingService {
         return plotMapper.selectList(new LambdaQueryWrapper<Plot>().orderByAsc(Plot::getPlotNumber));
     }
 
+    public Plot getPlot(Long id) {
+        Plot plot = plotMapper.selectById(id);
+        if (plot == null) throw new AppException(40404, "地块不存在");
+        return plot;
+    }
+
     @Transactional
     public Plot rentPlot(Long userId, Long plotId) {
         Plot plot = plotMapper.selectById(plotId);

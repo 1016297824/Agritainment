@@ -61,13 +61,10 @@ onMounted(() => {
 
 const loadJournal = async () => {
   try {
-    const journals = await journalApi.getJournals()
-    const found = journals.find(j => j.id === journalId.value)
-    if (found) {
-      form.value.title = found.title || ''
-      form.value.content = found.content || ''
-      form.value.images = found.images || []
-    }
+    const journal = await journalApi.getJournal(journalId.value)
+    form.value.title = journal.title || ''
+    form.value.content = journal.content || ''
+    form.value.images = journal.images || []
   } catch (e) {}
 }
 

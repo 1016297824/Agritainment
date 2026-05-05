@@ -21,6 +21,13 @@ public class JournalService {
                 .eq(Journal::getUserId, userId).orderByDesc(Journal::getCreatedAt));
     }
 
+    public Journal getJournal(Long userId, Long id) {
+        Journal journal = journalMapper.selectOne(new LambdaQueryWrapper<Journal>()
+                .eq(Journal::getId, id).eq(Journal::getUserId, userId));
+        if (journal == null) throw new AppException(40405, "日记不存在");
+        return journal;
+    }
+
     public List<Journal> getSharedJournals() {
         return journalMapper.selectList(new LambdaQueryWrapper<Journal>()
                 .eq(Journal::getIsShared, true).orderByDesc(Journal::getCreatedAt));

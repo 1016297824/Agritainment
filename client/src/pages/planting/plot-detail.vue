@@ -66,12 +66,8 @@ onMounted(async () => {
 
 const loadPlot = async () => {
   try {
-    const plots = await plantingApi.getPlots()
-    const found = plots.find(p => p.id === plotId.value)
-    if (found) {
-      plot.value = found
-      if (found.cameras) cameras.value = found.cameras
-    }
+    plot.value = await plantingApi.getPlot(plotId.value)
+    if (plot.value.cameras) cameras.value = plot.value.cameras
   } catch (e) {}
 }
 
