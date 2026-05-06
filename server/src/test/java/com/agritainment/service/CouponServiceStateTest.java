@@ -4,6 +4,7 @@ import com.agritainment.common.AppException;
 import com.agritainment.entity.Coupon;
 import com.agritainment.entity.ServiceReservation;
 import com.agritainment.mapper.CouponMapper;
+import com.agritainment.mapper.ProductMapper;
 import com.agritainment.mapper.ServiceReservationMapper;
 import com.agritainment.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
@@ -34,8 +35,10 @@ class CouponServiceStateTest {
 
     @Mock private CouponMapper couponMapper;
     @Mock private ServiceReservationMapper serviceReservationMapper;
+    @Mock private ProductMapper productMapper;
     @Mock private UserMapper userMapper;
     @Mock private UserService userService;
+    @Mock private NotificationService notificationService;
 
     @InjectMocks
     private CouponService couponService;

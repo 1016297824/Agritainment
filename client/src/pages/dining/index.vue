@@ -40,6 +40,7 @@
 
 <script>
 import { diningApi } from '@/api'
+import { requestReservationNotify } from '@/utils/subscribeMessage'
 
 export default {
   data() {
@@ -99,6 +100,7 @@ export default {
         uni.showToast({ title: '该桌位已被预约', icon: 'none' })
         return
       }
+      await requestReservationNotify()
       try {
         await diningApi.createReservation(table.id, this.selectedDate, this.timeSlot)
         uni.showToast({ title: '预约成功', icon: 'success' })

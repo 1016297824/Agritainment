@@ -38,6 +38,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { plantingApi, couponApi } from '@/api'
+import { requestServiceOrderNotify } from '@/utils/subscribeMessage'
 
 const service = ref({})
 const coupons = ref([])
@@ -69,6 +70,7 @@ onMounted(async () => {
 const handleSubmit = async () => {
   if (!canSubmit.value) return
   submitting.value = true
+  await requestServiceOrderNotify()
   try {
     await plantingApi.createServiceOrder(plotId.value, serviceId.value, selectedCouponId.value)
     uni.showToast({ title: '下单成功，已通知园丁', icon: 'success' })

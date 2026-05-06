@@ -21,6 +21,7 @@ export const useAuthStore = defineStore('auth', {
       this.userInfo = data.user
       uni.setStorageSync('token', data.token)
       uni.setStorageSync('userInfo', data.user)
+      this.bindWxOpenid()
       this.navigateToRoleHome()
     },
     async adminLogin(phone, password) {
@@ -37,6 +38,7 @@ export const useAuthStore = defineStore('auth', {
       this.userInfo = data.user
       uni.setStorageSync('token', data.token)
       uni.setStorageSync('userInfo', data.user)
+      this.bindWxOpenid()
     },
     async fetchUserInfo() {
       const data = await authApi.getMe()
@@ -57,6 +59,15 @@ export const useAuthStore = defineStore('auth', {
       uni.removeStorageSync('token')
       uni.removeStorageSync('userInfo')
       uni.navigateTo({ url: '/pages/login/index' })
+    },
+    async bindWxOpenid() {
+      try {
+        const [err, loginRes] = await uni.login({ provider: 'weixin' })
+        if (err || !loginRes.code) return
+        const userId = this.userInfo?.id
+        if (!userId) return
+        await authApi.wxLogin(loginRes.code, userId)
+      } catch (e) {}
     }
   }
 })

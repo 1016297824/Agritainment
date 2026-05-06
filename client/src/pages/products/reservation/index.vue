@@ -34,6 +34,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { couponApi } from '@/api'
+import { requestReservationNotify } from '@/utils/subscribeMessage'
 import ReservationCalendar from '@/components/ReservationCalendar.vue'
 
 const coupons = ref([])
@@ -62,6 +63,7 @@ onMounted(async () => {
 const handleReserve = async () => {
   if (!canSubmit.value) return
   submitting.value = true
+  await requestReservationNotify()
   try {
     await couponApi.createServiceReservation(selectedCouponId.value, productId.value, selectedDate.value)
     uni.showToast({ title: '预约成功', icon: 'success' })

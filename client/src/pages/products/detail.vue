@@ -9,8 +9,8 @@
         <text class="product-price">¥{{ product.price }}</text>
         <text v-if="product.member_price" class="member-price">会员 ¥{{ product.member_price }}</text>
       </view>
-      <view v-if="product.type === 'physical' && product.daily_quota !== null" class="stock-info">
-        <text class="stock-text">今日可兑: {{ Math.max(0, product.daily_quota - (product.today_redeemed || 0)) }}份</text>
+      <view v-if="product.type === 'physical' && product.remaining_quota !== null && product.remaining_quota !== -1" class="stock-info">
+        <text class="stock-text">今日可兑: {{ product.remaining_quota }}份</text>
       </view>
     </view>
 

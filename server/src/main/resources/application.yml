@@ -33,6 +33,14 @@ app:
     max-size: 10MB
   cors:
     allowed-origins: "*"
+  wechat:
+    mini-program:
+      appid: ${WECHAT_APPID:your-appid-here}
+      secret: ${WECHAT_SECRET:your-secret-here}
+      template:
+        reservation-created: ${WECHAT_TPL_RESERVATION_CREATED:}
+        reservation-cancelled: ${WECHAT_TPL_RESERVATION_CANCELLED:}
+        service-order-created: ${WECHAT_TPL_SERVICE_ORDER_CREATED:}
 
 logging:
   level:

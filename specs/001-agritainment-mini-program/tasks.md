@@ -109,8 +109,8 @@
 ## Phase 10: 收尾与跨模块
 
 - [ ] T052 实现微信支付集成 (预留接口)
-- [ ] T053 实现微信模板消息/订阅消息
-- [ ] T054 实现定时任务 (每日库存重置、预约超时处理)
+- [x] T053 实现微信模板消息/订阅消息
+- [ ] T054 实现定时任务 (每日库存重置、预约超时处理、优惠券过期处理)
 - [x] T055 实现前端 TabBar 导航 (原生 tabBar + 角色切换)
 - [ ] T056 配置 Nginx 反向代理和静态文件服务
 - [x] T057 种子数据脚本 (data.sql + INSERT IGNORE)
@@ -123,8 +123,8 @@
 
 - [x] T060 实现角色 TabBar 切换工具 client/src/utils/tabBar.js
 - [x] T061 更新 auth store 添加角色切换后跳转逻辑 client/src/stores/auth.js
-- [ ] T065 创建管理员独立登录页面 client/src/pages/admin/login/index.vue
-- [ ] T066 修改客户登录页，管理员登录改为跳转链接 client/src/pages/login/index.vue
+- [x] T071 创建管理员独立登录页面 client/src/pages/admin/login/index.vue
+- [x] T072 修改客户登录页，管理员登录改为跳转链接 client/src/pages/login/index.vue
 - [x] T062 实现员工扫码核销页面 client/src/pages/staff/scan/index.vue
 - [x] T063 实现员工预约管理页面 client/src/pages/staff/reservations/index.vue
 - [x] T064 实现员工订单管理页面 client/src/pages/staff/orders/index.vue
@@ -177,17 +177,17 @@ Phase 1 (初始化) ✅
 | 任务 | 优先级 | 说明 |
 |------|--------|------|
 | T052 微信支付 | LOW | 需要商户号和微信支付 API 接入 |
-| T053 通知服务 | LOW | 需要微信模板消息/订阅消息 |
-| T054 定时任务 | LOW | Spring @Scheduled 实现库存重置/过期处理 |
+| T053 通知服务 | ✅ 已实现 | 微信订阅消息（预约/取消/服务下单通知） |
+| T054 定时任务 | LOW | Spring @Scheduled 实现库存重置/预约超时/过期处理 |
 | T056 Nginx 部署 | LOW | 生产环境部署配置 |
 
 ## 进度统计
 
 | 状态 | 数量 | 占比 |
 |------|------|------|
-| ✅ 已完成 | 66 | 94% |
+| ✅ 已完成 | 69 | 96% |
 | 🟡 部分完成 | 2 | 3% |
-| ❌ 未实现 | 2 | 3% |
-| **总计** | **70** | 100% |
+| ❌ 未实现 | 1 | 1% |
+| **总计** | **72** | 100% |
 
-> 注: 原始 109 项任务已合并精简为 70 项（去除重复、合并同类项、更新技术栈差异）。
+> 注: 原始 109 项任务已合并精简为 72 项（去除重复、合并同类项、更新技术栈差异、修复编号冲突）。

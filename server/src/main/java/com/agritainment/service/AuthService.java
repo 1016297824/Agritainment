@@ -87,5 +87,14 @@ public class AuthService {
         return user;
     }
 
+    public void bindOpenid(Long userId, String openid) {
+        if (userId == null || openid == null) return;
+        User user = userMapper.selectById(userId);
+        if (user != null && !openid.equals(user.getOpenid())) {
+            user.setOpenid(openid);
+            userMapper.updateById(user);
+        }
+    }
+
     private record SmsCodeEntry(String code, LocalDateTime expireAt) {}
 }

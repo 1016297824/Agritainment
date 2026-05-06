@@ -111,7 +111,7 @@
 | image_url | VARCHAR(255) | | 产品图片 |
 | description | TEXT | | 产品简介 |
 | daily_quota | INT | DEFAULT -1 | 每日兑换限额(-1=无限) |
-| remaining_quota | INT | DEFAULT -1 | 当日剩余 |
+| remaining_quota | INT | DEFAULT -1 | 当日剩余(-1=无限) |
 | is_available | BOOLEAN | DEFAULT TRUE | 是否上架 |
 | version | INT | DEFAULT 0 | 乐观锁版本号 |
 | created_at | DATETIME | DEFAULT CURRENT_TIMESTAMP | |

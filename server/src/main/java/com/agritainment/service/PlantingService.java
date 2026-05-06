@@ -24,6 +24,7 @@ public class PlantingService {
     private final CameraQueueMapper cameraQueueMapper;
     private final CameraPlotBindingMapper cameraPlotBindingMapper;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public List<Plot> getPlots() {
         return plotMapper.selectList(new LambdaQueryWrapper<Plot>().orderByAsc(Plot::getPlotNumber));
@@ -67,6 +68,12 @@ public class PlantingService {
         order.setCouponId(couponId);
         order.setStatus("pending");
         gardenServiceOrderMapper.insert(order);
+
+        GardenService svc = gardenServiceMapper.selectById(serviceId);
+        Plot plot = plotMapper.selectById(plotId);
+        if (svc != null && plot != null) {
+            notificationService.notifyGardenServiceOrderCreated(userId, svc.getName(), plot.getPlotNumber());
+        }
         return order;
     }
 

@@ -27,6 +27,7 @@ public class DiningService {
     private final OrderItemMapper orderItemMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final NotificationService notificationService;
 
     public List<Map<String, Object>> getTables(LocalDate date, String timeSlot) {
         List<DiningTable> tables = tableMapper.selectList(new LambdaQueryWrapper<DiningTable>().orderByAsc(DiningTable::getTableNumber));
@@ -77,6 +78,9 @@ public class DiningService {
         reservationMapper.insert(reservation);
 
         tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, tableId).set(DiningTable::getStatus, "reserved"));
+
+        DiningTable table = tableMapper.selectById(tableId);
+        notificationService.notifyReservationCreated(userId, table != null ? table.getTableNumber() : "", date, timeSlot);
         return reservation;
     }
 
@@ -96,7 +100,9 @@ public class DiningService {
         reservation.setIsLateCancel(isLateCancel);
         reservationMapper.updateById(reservation);
 
+        DiningTable table = tableMapper.selectById(reservation.getTableId());
         tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, reservation.getTableId()).set(DiningTable::getStatus, "idle"));
+        notificationService.notifyReservationCancelled(userId, table != null ? table.getTableNumber() : "", reservation.getReservationDate(), reservation.getTimeSlot());
         return reservation;
     }
 

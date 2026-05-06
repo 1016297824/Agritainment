@@ -36,6 +36,7 @@ class DiningServiceStockTest {
     @Mock private OrderItemMapper orderItemMapper;
     @Mock private UserService userService;
     @Mock private UserMapper userMapper;
+    @Mock private NotificationService notificationService;
 
     @InjectMocks
     private DiningService diningService;

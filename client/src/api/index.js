@@ -5,6 +5,7 @@ export const authApi = {
   register: (phone, code) => post('/auth/register', { phone, code }),
   login: (phone, code) => post('/auth/login', { phone, code }),
   adminLogin: (phone, password) => post('/auth/admin-login', { phone, password }),
+  wxLogin: (code, userId) => post('/auth/wx-login', { code, userId }),
   getMe: () => get('/auth/me')
 }
 

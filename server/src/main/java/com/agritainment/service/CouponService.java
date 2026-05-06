@@ -4,6 +4,7 @@ import com.agritainment.common.AppException;
 import com.agritainment.entity.Coupon;
 import com.agritainment.entity.ServiceReservation;
 import com.agritainment.mapper.CouponMapper;
+import com.agritainment.mapper.ProductMapper;
 import com.agritainment.mapper.ServiceReservationMapper;
 import com.agritainment.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -22,8 +23,10 @@ public class CouponService {
 
     private final CouponMapper couponMapper;
     private final ServiceReservationMapper serviceReservationMapper;
+    private final ProductMapper productMapper;
     private final UserMapper userMapper;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public List<Coupon> getCoupons(Long userId) {
         return couponMapper.selectList(new LambdaQueryWrapper<Coupon>()
@@ -73,6 +76,13 @@ public class CouponService {
         reservation.setStatus("pending");
         reservation.setIsLateCancel(false);
         serviceReservationMapper.insert(reservation);
+
+        String productName = "";
+        if (productId != null) {
+            var product = productMapper.selectById(productId);
+            if (product != null) productName = product.getName();
+        }
+        notificationService.notifyServiceReservationCreated(userId, productName, date);
         return reservation;
     }
 

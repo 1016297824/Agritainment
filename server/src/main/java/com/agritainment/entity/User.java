@@ -20,6 +20,7 @@ public class User {
     private LocalDate memberExpireAt;
     private Integer noShowCount;
     private Boolean isBlacklisted;
+    private String openid;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
     @TableField(fill = FieldFill.INSERT_UPDATE)
