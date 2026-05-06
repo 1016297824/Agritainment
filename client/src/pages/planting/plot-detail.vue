@@ -42,17 +42,41 @@
         </view>
       </view>
     </view>
+
+    <view v-if="canBind" class="section">
+      <view class="bind-btn" @tap="showBindModal = true">
+        <text class="bind-btn-text">绑定客户地块</text>
+      </view>
+    </view>
+
+    <view v-if="showBindModal" class="modal">
+      <view class="modal-content">
+        <text class="modal-title">绑定客户地块</text>
+        <text class="modal-desc">输入客户12位身份码完成地块绑定</text>
+        <input v-model="identityCode" class="modal-input" placeholder="输入客户身份码" maxlength="12" />
+        <view class="modal-actions">
+          <button @tap="showBindModal = false">取消</button>
+          <button class="btn-confirm" @tap="handleBind">确定</button>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { plantingApi } from '@/api'
+import { useAuthStore } from '@/stores/auth'
 
+const auth = useAuthStore()
 const plot = ref({})
 const cameras = ref([])
 const gardenServices = ref([])
 const plotId = ref(0)
+const showBindModal = ref(false)
+const identityCode = ref('')
+
+const canBind = computed(() => auth.isStaff || auth.isAdmin)
 
 onMounted(async () => {
   const pages = getCurrentPages()
@@ -83,6 +107,22 @@ const handleRent = async () => {
     uni.showToast({ title: '租用成功', icon: 'success' })
     loadPlot()
   } catch (e) {}
+}
+
+const handleBind = async () => {
+  if (!identityCode.value) {
+    uni.showToast({ title: '请输入客户身份码', icon: 'none' })
+    return
+  }
+  try {
+    await plantingApi.bindPlotToUser(plotId.value, identityCode.value)
+    uni.showToast({ title: '绑定成功', icon: 'success' })
+    showBindModal.value = false
+    identityCode.value = ''
+    loadPlot()
+  } catch (e) {
+    uni.showToast({ title: e.message || '绑定失败', icon: 'none' })
+  }
 }
 
 const viewCamera = (cam) => {
@@ -121,4 +161,13 @@ const orderService = (service) => {
 .service-price { font-size: 28rpx; font-weight: 600; color: var(--color-cta); display: block; margin-top: 4rpx; }
 .service-btn { background: var(--color-cta); padding: 12rpx 32rpx; border-radius: var(--radius-sm); }
 .service-btn-text { color: #fff; font-size: 26rpx; font-weight: 500; }
+.bind-btn { background: var(--color-cta); border-radius: var(--radius-sm); padding: 28rpx; text-align: center; }
+.bind-btn-text { color: #fff; font-size: 32rpx; font-weight: 600; }
+.modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 999; }
+.modal-content { background: #fff; border-radius: 16rpx; padding: 32rpx; width: 80%; }
+.modal-title { font-size: 32rpx; font-weight: 600; color: #1F2937; margin-bottom: 8rpx; display: block; }
+.modal-desc { font-size: 26rpx; color: #6B7280; margin-bottom: 16rpx; display: block; }
+.modal-input { border: 2rpx solid #D1D5DB; border-radius: 8rpx; padding: 12rpx 16rpx; margin-bottom: 12rpx; font-size: 28rpx; }
+.modal-actions { display: flex; gap: 16rpx; margin-top: 16rpx; }
+.btn-confirm { background: #15803D; color: #fff; border-radius: 8rpx; }
 </style>

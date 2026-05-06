@@ -46,7 +46,8 @@ export const couponApi = {
 export const membershipApi = {
   getStatus: () => get('/membership/status'),
   purchase: () => post('/membership/purchase'),
-  getConfig: () => get('/membership/config'),
+  getConfig: () => get('/admin/membership-config'),
+  updateConfig: (data) => put('/admin/membership-config', data),
   grant: (user_id) => post('/membership/grant', { user_id })
 }
 
@@ -63,7 +64,8 @@ export const plantingApi = {
   getCameras: () => get('/planting/cameras'),
   createCamera: (data) => post('/planting/cameras', data),
   deleteCamera: (id) => del(`/planting/cameras/${id}`),
-  bindCameraPlot: (cameraId, plotId) => post(`/planting/cameras/${cameraId}/bind-plot/${plotId}`)
+  bindCameraPlot: (cameraId, plotId) => post(`/planting/cameras/${cameraId}/bind-plot/${plotId}`),
+  bindPlotToUser: (plotId, identityCode) => post(`/planting/plots/${plotId}/bind`, { identity_code: identityCode })
 }
 
 export const journalApi = {

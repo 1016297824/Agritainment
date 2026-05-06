@@ -62,7 +62,7 @@ const loadDishes = async () => {
 
 const loadProducts = async () => {
   try {
-    products.value = await productApi.getList()
+    products.value = await productApi.getProducts()
   } catch (err) { /* ignore */ }
 }
 
