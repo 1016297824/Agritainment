@@ -1,6 +1,7 @@
 package com.agritainment.controller;
 
 import com.agritainment.annotation.RequireRole;
+import com.agritainment.common.AppException;
 import com.agritainment.common.Result;
 import com.agritainment.dto.ControlCameraRequest;
 import com.agritainment.dto.CreateCameraRequest;
@@ -105,5 +106,13 @@ public class PlantingController {
     public Result<Void> bindCameraPlot(@PathVariable Long cameraId, @PathVariable Long plotId) {
         plantingService.bindCameraPlot(cameraId, plotId);
         return Result.ok(null);
+    }
+
+    @PostMapping("/plots/{id}/bind")
+    @RequireRole({"staff", "admin"})
+    public Result<Plot> bindPlotToUser(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String identityCode = body.get("identity_code");
+        if (identityCode == null || identityCode.isBlank()) throw new AppException(40001, "identity_code 不能为空");
+        return Result.ok(plantingService.bindPlotToUser(id, identityCode));
     }
 }

@@ -91,6 +91,27 @@ public class MembershipService {
     }
 
     @Transactional
+    public MembershipConfig updateConfig(Double annualPrice, Double discountRate, String giftProductIds) {
+        MembershipConfig config = getActiveConfig();
+        if (config == null) {
+            config = new MembershipConfig();
+            config.setAnnualPrice(annualPrice);
+            config.setDiscountRate(discountRate);
+            config.setGiftProductIds(giftProductIds);
+            membershipConfigMapper.insert(config);
+        } else {
+            LambdaUpdateWrapper<MembershipConfig> wrapper = new LambdaUpdateWrapper<MembershipConfig>()
+                    .eq(MembershipConfig::getId, config.getId());
+            if (annualPrice != null) wrapper.set(MembershipConfig::getAnnualPrice, annualPrice);
+            if (discountRate != null) wrapper.set(MembershipConfig::getDiscountRate, discountRate);
+            if (giftProductIds != null) wrapper.set(MembershipConfig::getGiftProductIds, giftProductIds);
+            membershipConfigMapper.update(null, wrapper);
+            config = membershipConfigMapper.selectById(config.getId());
+        }
+        return config;
+    }
+
+    @Transactional
     public void grant(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new AppException(40403, "用户不存在");

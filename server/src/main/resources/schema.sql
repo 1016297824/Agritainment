@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     price DECIMAL(10,2) NOT NULL,
     image_url VARCHAR(255),
     description TEXT,
+    daily_stock INT DEFAULT -1,
     remaining_stock INT DEFAULT -1,
     is_available BOOLEAN DEFAULT TRUE,
     version INT DEFAULT 0,

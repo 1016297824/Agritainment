@@ -23,6 +23,7 @@ public class PlantingService {
     private final CameraMapper cameraMapper;
     private final CameraQueueMapper cameraQueueMapper;
     private final CameraPlotBindingMapper cameraPlotBindingMapper;
+    private final UserMapper userMapper;
     private final UserService userService;
     private final NotificationService notificationService;
 
@@ -131,5 +132,20 @@ public class PlantingService {
         binding.setCameraId(cameraId);
         binding.setPlotId(plotId);
         cameraPlotBindingMapper.insert(binding);
+    }
+
+    @Transactional
+    public Plot bindPlotToUser(Long plotId, String identityCode) {
+        Plot plot = plotMapper.selectById(plotId);
+        if (plot == null) throw new AppException(40201, "地块不存在");
+        if (!"available".equals(plot.getStatus()) && !"rented".equals(plot.getStatus()))
+            throw new AppException(40202, "地块状态不允许绑定");
+
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getIdentityCode, identityCode));
+        if (user == null) throw new AppException(40403, "身份码对应的用户不存在");
+
+        plotMapper.update(null, new LambdaUpdateWrapper<Plot>().eq(Plot::getId, plotId)
+                .set(Plot::getRenterId, user.getId()).set(Plot::getStatus, "rented"));
+        return plotMapper.selectById(plotId);
     }
 }

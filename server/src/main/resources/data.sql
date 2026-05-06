@@ -19,17 +19,17 @@ INSERT IGNORE INTO `tables` (table_number, qr_code, capacity, status) VALUES
 ('D2', 'QR_D2', 4, 'idle'),
 ('VIP1', 'QR_VIP1', 10, 'idle');
 
-INSERT IGNORE INTO dishes (name, price, image_url, description, remaining_stock, is_available) VALUES
-('农家土鸡', 68.00, '/images/dishes/chicken.jpg', '散养土鸡，柴火慢炖', 20, TRUE),
-('红烧肉', 58.00, '/images/dishes/pork.jpg', '土猪五花肉，秘制酱汁', 15, TRUE),
-('清蒸鲈鱼', 78.00, '/images/dishes/fish.jpg', '水库鲜活鲈鱼', 10, TRUE),
-('时令蔬菜', 28.00, '/images/dishes/veggie.jpg', '自家菜地新鲜采摘', 30, TRUE),
-('土鸡汤', 48.00, '/images/dishes/soup.jpg', '老母鸡炖汤，滋补养生', 15, TRUE),
-('农家小炒肉', 38.00, '/images/dishes/stirfry.jpg', '土猪里脊配青椒', 20, TRUE),
-('香煎豆腐', 22.00, '/images/dishes/tofu.jpg', '手工石磨豆腐', 25, TRUE),
-('凉拌黄瓜', 16.00, '/images/dishes/cucumber.jpg', '自家种的黄瓜', 30, TRUE),
-('米饭', 3.00, '/images/dishes/rice.jpg', '新米现蒸', -1, TRUE),
-('酸梅汤', 8.00, '/images/dishes/plum.jpg', '自制酸梅汤', -1, TRUE);
+INSERT IGNORE INTO dishes (name, price, image_url, description, daily_stock, remaining_stock, is_available) VALUES
+('农家土鸡', 68.00, '/images/dishes/chicken.jpg', '散养土鸡，柴火慢炖', 20, 20, TRUE),
+('红烧肉', 58.00, '/images/dishes/pork.jpg', '土猪五花肉，秘制酱汁', 15, 15, TRUE),
+('清蒸鲈鱼', 78.00, '/images/dishes/fish.jpg', '水库鲜活鲈鱼', 10, 10, TRUE),
+('时令蔬菜', 28.00, '/images/dishes/veggie.jpg', '自家菜地新鲜采摘', 30, 30, TRUE),
+('土鸡汤', 48.00, '/images/dishes/soup.jpg', '老母鸡炖汤，滋补养生', 15, 15, TRUE),
+('农家小炒肉', 38.00, '/images/dishes/stirfry.jpg', '土猪里脊配青椒', 20, 20, TRUE),
+('香煎豆腐', 22.00, '/images/dishes/tofu.jpg', '手工石磨豆腐', 25, 25, TRUE),
+('凉拌黄瓜', 16.00, '/images/dishes/cucumber.jpg', '自家种的黄瓜', 30, 30, TRUE),
+('米饭', 3.00, '/images/dishes/rice.jpg', '新米现蒸', -1, -1, TRUE),
+('酸梅汤', 8.00, '/images/dishes/plum.jpg', '自制酸梅汤', -1, -1, TRUE);
 
 INSERT IGNORE INTO products (name, type, price, member_price, image_url, description, daily_quota, remaining_quota, is_available) VALUES
 ('采摘体验券', 'service', 58.00, 48.00, '/images/products/pick.jpg', '时令水果采摘，含2斤带走', 50, 50, TRUE),
