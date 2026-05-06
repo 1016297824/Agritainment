@@ -29,25 +29,15 @@ public class ScheduledTaskService {
     public void resetDailyStock() {
         log.info("开始每日库存重置");
 
-        List<Dish> dishes = dishMapper.selectList(null);
-        for (Dish dish : dishes) {
-            if (dish.getDailyStock() != null && dish.getDailyStock() >= 0) {
-                dishMapper.update(null, new LambdaUpdateWrapper<Dish>()
-                        .eq(Dish::getId, dish.getId())
-                        .set(Dish::getRemainingStock, dish.getDailyStock()));
-            }
-        }
+        dishMapper.update(null, new LambdaUpdateWrapper<Dish>()
+                .ge(Dish::getDailyStock, 0)
+                .setSql("remaining_stock = daily_stock"));
 
-        List<Product> products = productMapper.selectList(null);
-        for (Product product : products) {
-            if (product.getDailyQuota() != null && product.getDailyQuota() >= 0) {
-                productMapper.update(null, new LambdaUpdateWrapper<Product>()
-                        .eq(Product::getId, product.getId())
-                        .set(Product::getRemainingQuota, product.getDailyQuota()));
-            }
-        }
+        productMapper.update(null, new LambdaUpdateWrapper<Product>()
+                .ge(Product::getDailyQuota, 0)
+                .setSql("remaining_quota = daily_quota"));
 
-        log.info("每日库存重置完成: dishes={}, products={}", dishes.size(), products.size());
+        log.info("每日库存重置完成");
     }
 
     @Scheduled(cron = "0 */30 * * * ?")
@@ -65,6 +55,7 @@ public class ScheduledTaskService {
         for (TableReservation reservation : expiredTableReservations) {
             tableReservationMapper.update(null, new LambdaUpdateWrapper<TableReservation>()
                     .eq(TableReservation::getId, reservation.getId())
+                    .eq(TableReservation::getStatus, "pending")
                     .set(TableReservation::getStatus, "no_show"));
             incrementNoShow(reservation.getUserId());
             log.info("桌位预约超时标记no_show: reservationId={}, userId={}", reservation.getId(), reservation.getUserId());
@@ -78,6 +69,7 @@ public class ScheduledTaskService {
         for (ServiceReservation reservation : expiredServiceReservations) {
             serviceReservationMapper.update(null, new LambdaUpdateWrapper<ServiceReservation>()
                     .eq(ServiceReservation::getId, reservation.getId())
+                    .eq(ServiceReservation::getStatus, "pending")
                     .set(ServiceReservation::getStatus, "no_show"));
             incrementNoShow(reservation.getUserId());
             log.info("服务预约超时标记no_show: reservationId={}, userId={}", reservation.getId(), reservation.getUserId());
@@ -101,12 +93,9 @@ public class ScheduledTaskService {
     }
 
     private void incrementNoShow(Long userId) {
-        User user = userMapper.selectById(userId);
-        if (user == null) return;
-        int newCount = (user.getNoShowCount() != null ? user.getNoShowCount() : 0) + 1;
         userMapper.update(null, new LambdaUpdateWrapper<User>()
                 .eq(User::getId, userId)
-                .set(User::getNoShowCount, newCount)
-                .set(User::getIsBlacklisted, newCount >= 3));
+                .setSql("no_show_count = COALESCE(no_show_count, 0) + 1")
+                .setSql("is_blacklisted = (COALESCE(no_show_count, 0) + 1 >= 3)"));
     }
 }

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -52,49 +50,14 @@ class ScheduledTaskServiceTest {
     class ResetDailyStock {
 
         @Test
-        @DisplayName("有每日库存的菜品：重置remaining_stock为daily_stock")
-        void dishWithDailyStock_resetsRemaining() {
-            Dish dish = new Dish();
-            dish.setId(1L);
-            dish.setDailyStock(20);
-            dish.setRemainingStock(5);
-            when(dishMapper.selectList(null)).thenReturn(List.of(dish));
-            when(dishMapper.update(any(), any())).thenReturn(1);
-            when(productMapper.selectList(null)).thenReturn(Collections.emptyList());
+        @DisplayName("批量重置菜品库存：执行一条UPDATE语句")
+        void batchResetDishStock() {
+            when(dishMapper.update(any(), any())).thenReturn(0);
+            when(productMapper.update(any(), any())).thenReturn(0);
 
             scheduledTaskService.resetDailyStock();
 
             verify(dishMapper).update(any(), any());
-        }
-
-        @Test
-        @DisplayName("daily_stock=-1的菜品：不重置")
-        void dishWithUnlimitedStock_notReset() {
-            Dish dish = new Dish();
-            dish.setId(1L);
-            dish.setDailyStock(-1);
-            dish.setRemainingStock(-1);
-            when(dishMapper.selectList(null)).thenReturn(List.of(dish));
-            when(productMapper.selectList(null)).thenReturn(Collections.emptyList());
-
-            scheduledTaskService.resetDailyStock();
-
-            verify(dishMapper, never()).update(any(), any());
-        }
-
-        @Test
-        @DisplayName("产品库存重置：remaining_quota重置为daily_quota")
-        void productQuota_resetsToDailyQuota() {
-            Product product = new Product();
-            product.setId(1L);
-            product.setDailyQuota(50);
-            product.setRemainingQuota(10);
-            when(dishMapper.selectList(null)).thenReturn(Collections.emptyList());
-            when(productMapper.selectList(null)).thenReturn(List.of(product));
-            when(productMapper.update(any(), any())).thenReturn(1);
-
-            scheduledTaskService.resetDailyStock();
-
             verify(productMapper).update(any(), any());
         }
     }
@@ -104,7 +67,7 @@ class ScheduledTaskServiceTest {
     class MarkNoShowReservations {
 
         @Test
-        @DisplayName("过期桌位预约：标记no_show并增加爽约次数")
+        @DisplayName("过期桌位预约：标记no_show并原子增加爽约次数")
         void expiredTableReservation_markedNoShow() {
             TableReservation reservation = new TableReservation();
             reservation.setId(1L);
@@ -112,13 +75,8 @@ class ScheduledTaskServiceTest {
             reservation.setReservationDate(LocalDate.now().minusDays(1));
             reservation.setStatus("pending");
 
-            User user = new User();
-            user.setId(100L);
-            user.setNoShowCount(0);
-
             when(tableReservationMapper.selectList(any())).thenReturn(List.of(reservation));
             when(tableReservationMapper.update(any(), any())).thenReturn(1);
-            when(userMapper.selectById(100L)).thenReturn(user);
             when(userMapper.update(any(), any())).thenReturn(1);
             when(serviceReservationMapper.selectList(any())).thenReturn(Collections.emptyList());
 
@@ -129,27 +87,15 @@ class ScheduledTaskServiceTest {
         }
 
         @Test
-        @DisplayName("爽约3次：加入黑名单")
-        void threeNoShows_blacklisted() {
-            TableReservation reservation = new TableReservation();
-            reservation.setId(1L);
-            reservation.setUserId(100L);
-            reservation.setReservationDate(LocalDate.now().minusDays(1));
-            reservation.setStatus("pending");
-
-            User user = new User();
-            user.setId(100L);
-            user.setNoShowCount(2);
-
-            when(tableReservationMapper.selectList(any())).thenReturn(List.of(reservation));
-            when(tableReservationMapper.update(any(), any())).thenReturn(1);
-            when(userMapper.selectById(100L)).thenReturn(user);
-            when(userMapper.update(any(), any())).thenReturn(1);
+        @DisplayName("无过期预约：不执行更新")
+        void noExpiredReservations_noUpdate() {
+            when(tableReservationMapper.selectList(any())).thenReturn(Collections.emptyList());
             when(serviceReservationMapper.selectList(any())).thenReturn(Collections.emptyList());
 
             scheduledTaskService.markNoShowReservations();
 
-            verify(userMapper).update(any(), any());
+            verify(tableReservationMapper, never()).update(any(), any());
+            verify(userMapper, never()).update(any(), any());
         }
     }
 
