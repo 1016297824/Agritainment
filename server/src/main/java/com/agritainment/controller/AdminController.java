@@ -137,7 +137,15 @@ public class AdminController {
     public Result<MembershipConfig> updateMembershipConfig(@RequestBody Map<String, Object> body) {
         Double annualPrice = body.get("annual_price") != null ? Double.valueOf(body.get("annual_price").toString()) : null;
         Double discountRate = body.get("discount_rate") != null ? Double.valueOf(body.get("discount_rate").toString()) : null;
-        String giftProductIds = body.get("gift_product_ids") != null ? body.get("gift_product_ids").toString() : null;
+        String giftProductIds = null;
+        if (body.get("gift_product_ids") != null) {
+            String raw = body.get("gift_product_ids").toString();
+            if (raw.startsWith("[")) {
+                giftProductIds = raw;
+            } else {
+                giftProductIds = "[" + raw.replaceAll("\\s+", "") + "]";
+            }
+        }
         return Result.ok(membershipService.updateConfig(annualPrice, discountRate, giftProductIds));
     }
 }
