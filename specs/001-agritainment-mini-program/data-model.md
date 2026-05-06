@@ -25,6 +25,7 @@
 | member_expire_at | DATE | | 会员过期时间 |
 | no_show_count | INT | DEFAULT 0 | 爽约次数 |
 | is_blacklisted | BOOLEAN | DEFAULT FALSE | 是否黑名单 |
+| openid | VARCHAR(64) | UNIQUE | 微信openid(用于登录和订阅消息) |
 | created_at | DATETIME | DEFAULT CURRENT_TIMESTAMP | 创建时间 |
 | updated_at | DATETIME | ON UPDATE CURRENT_TIMESTAMP | 更新时间 |
 
@@ -268,7 +269,7 @@
 | 项目 | 原设计 | 实际实现 | 原因 |
 |------|--------|----------|------|
 | 主键类型 | INT | BIGINT | MyBatis-Plus 默认雪花算法兼容 |
-| dishes.daily_stock | 存在 | 移除 | 简化为 remaining_stock 单字段 |
+| dishes.daily_stock | 存在 | 保留 | 每日库存重置需要 daily_stock 作为基准值，ScheduledTaskService 依赖 |
 | dishes.name | NOT NULL | UNIQUE, NOT NULL | 防止种子数据重复 |
 | dishes.version | 无 | DEFAULT 0 | 乐观锁 |
 | products.name | NOT NULL | UNIQUE, NOT NULL | 防止种子数据重复 |

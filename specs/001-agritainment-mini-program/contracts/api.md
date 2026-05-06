@@ -42,6 +42,17 @@
 ### POST /auth/admin-login
 管理员特殊登录
 
+### POST /auth/wx-login
+微信小程序登录（code换取openid，自动绑定或注册）
+
+**Request:**
+```json
+{ "code": "wx_login_code" }
+```
+
+### GET /auth/me
+获取当前登录用户信息
+
 ---
 
 ## 2. 餐饮模块
@@ -285,6 +296,9 @@
 
 ### DELETE /journals/:id/share
 取消分享
+
+### GET /journals/shared
+获取首页分享日志列表
 
 ---
 
