@@ -11,6 +11,7 @@ import com.agritainment.dto.UpdateProductRequest;
 import com.agritainment.dto.UpdateUserStatusRequest;
 import com.agritainment.entity.*;
 import com.agritainment.service.AdminService;
+import com.agritainment.service.MembershipService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+    private final MembershipService membershipService;
 
     @GetMapping("/dashboard")
     @RequireRole({"admin"})
@@ -122,5 +124,20 @@ public class AdminController {
     public Result<Void> deletePlot(@PathVariable Long id) {
         adminService.deletePlot(id);
         return Result.ok(null);
+    }
+
+    @GetMapping("/membership-config")
+    @RequireRole({"admin"})
+    public Result<MembershipConfig> getMembershipConfig() {
+        return Result.ok(membershipService.getConfig());
+    }
+
+    @PutMapping("/membership-config")
+    @RequireRole({"admin"})
+    public Result<MembershipConfig> updateMembershipConfig(@RequestBody Map<String, Object> body) {
+        Double annualPrice = body.get("annual_price") != null ? Double.valueOf(body.get("annual_price").toString()) : null;
+        Double discountRate = body.get("discount_rate") != null ? Double.valueOf(body.get("discount_rate").toString()) : null;
+        String giftProductIds = body.get("gift_product_ids") != null ? body.get("gift_product_ids").toString() : null;
+        return Result.ok(membershipService.updateConfig(annualPrice, discountRate, giftProductIds));
     }
 }

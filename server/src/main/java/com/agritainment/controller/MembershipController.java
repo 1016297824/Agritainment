@@ -3,7 +3,6 @@ package com.agritainment.controller;
 import com.agritainment.annotation.RequireRole;
 import com.agritainment.common.Result;
 import com.agritainment.dto.GrantMembershipRequest;
-import com.agritainment.entity.MembershipConfig;
 import com.agritainment.service.MembershipService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +27,6 @@ public class MembershipController {
     @RequireRole({"customer", "staff", "admin"})
     public Result<Map<String, Object>> purchase(@RequestAttribute("userId") Long userId) {
         return Result.ok(membershipService.purchase(userId));
-    }
-
-    @GetMapping("/config")
-    public Result<MembershipConfig> getConfig() {
-        return Result.ok(membershipService.getConfig());
-    }
-
-    @PutMapping("/config")
-    @RequireRole({"admin"})
-    public Result<MembershipConfig> updateConfig(@RequestBody Map<String, Object> body) {
-        Double annualPrice = body.get("annual_price") != null ? Double.valueOf(body.get("annual_price").toString()) : null;
-        Double discountRate = body.get("discount_rate") != null ? Double.valueOf(body.get("discount_rate").toString()) : null;
-        String giftProductIds = body.get("gift_product_ids") != null ? body.get("gift_product_ids").toString() : null;
-        return Result.ok(membershipService.updateConfig(annualPrice, discountRate, giftProductIds));
     }
 
     @PostMapping("/grant")
