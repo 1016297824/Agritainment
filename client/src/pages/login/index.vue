@@ -36,8 +36,12 @@ export default {
       phone: '',
       code: '',
       codeText: '获取验证码',
-      countdown: 0
+      countdown: 0,
+      timer: null
     }
+  },
+  beforeUnmount() {
+    if (this.timer) clearInterval(this.timer)
   },
   methods: {
     async sendCode() {
@@ -68,13 +72,14 @@ export default {
       try {
         const store = useAuthStore()
         await store.login(this.phone, this.code)
-        uni.switchTab({ url: '/pages/index/index' })
       } catch (e) {
         try {
           const store = useAuthStore()
           await store.register(this.phone, this.code)
-          uni.switchTab({ url: '/pages/index/index' })
-        } catch (e2) {}
+          store.navigateToRoleHome()
+        } catch (e2) {
+          uni.showToast({ title: '登录/注册失败，请重试', icon: 'none' })
+        }
       }
     },
     goAdminLogin() {

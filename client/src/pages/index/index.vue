@@ -58,14 +58,23 @@
 
 <script>
 import { journalApi } from '@/api'
+import { useAuthStore } from '@/stores/auth'
 
 export default {
   data() {
     return {
-      journals: []
+      journals: [],
+      _redirecting: false
     }
   },
   onShow() {
+    const store = useAuthStore()
+    if (!store.isLoggedIn && !this._redirecting) {
+      this._redirecting = true
+      uni.switchTab({ url: '/pages/profile/index' })
+      setTimeout(() => { this._redirecting = false }, 500)
+      return
+    }
     this.loadJournals()
   },
   methods: {

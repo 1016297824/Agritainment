@@ -1,13 +1,21 @@
 <script>
+import { useAuthStore } from '@/stores/auth'
+
 export default {
   onLaunch() {
-    console.log('App Launch')
+    const store = useAuthStore()
+    if (!store.isLoggedIn) {
+      uni.switchTab({
+        url: '/pages/profile/index',
+        fail: (err) => {
+          console.warn('[App] switchTab failed in onLaunch:', err)
+        }
+      })
+    }
   },
   onShow() {
-    console.log('App Show')
   },
   onHide() {
-    console.log('App Hide')
   }
 }
 </script>

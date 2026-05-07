@@ -4,7 +4,9 @@
   "scripts": {
     "dev:mp-weixin": "uni -p mp-weixin",
     "dev:h5": "uni -p h5",
-    "build:mp-weixin": "uni build -p mp-weixin"
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-4060620250520001",
@@ -18,6 +20,11 @@
   "devDependencies": {
     "@dcloudio/uni-cli-shared": "3.0.0-4060620250520001",
     "@dcloudio/vite-plugin-uni": "3.0.0-4060620250520001",
-    "vite": "^5.2.8"
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/test-utils": "^2.4.10",
+    "happy-dom": "^20.9.0",
+    "playwright": "^1.59.1",
+    "vite": "^5.2.8",
+    "vitest": "^4.1.5"
   }
 }

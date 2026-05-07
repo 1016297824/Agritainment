@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { authApi } from '@/api'
-import { getRoleHome } from '@/utils/tabBar'
+import { getRoleHome, isTabBarPage } from '@/utils/tabBar'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -47,10 +47,10 @@ export const useAuthStore = defineStore('auth', {
     },
     navigateToRoleHome() {
       const home = getRoleHome(this.role)
-      if (this.isAdmin) {
-        uni.redirectTo({ url: home })
-      } else {
+      if (isTabBarPage(home)) {
         uni.switchTab({ url: home })
+      } else {
+        uni.reLaunch({ url: home })
       }
     },
     logout() {
