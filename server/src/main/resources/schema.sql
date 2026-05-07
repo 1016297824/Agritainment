@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     member_expire_at DATE,
     no_show_count INT DEFAULT 0,
     is_blacklisted BOOLEAN DEFAULT FALSE,
-    openid VARCHAR(64),
+    openid VARCHAR(64) UNIQUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

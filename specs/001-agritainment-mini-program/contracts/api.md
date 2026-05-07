@@ -119,11 +119,26 @@
 ### POST /dining/orders/:id/change-table
 换桌
 
-### POST /dining/orders/:id/refund-item
-退菜
+### POST /dining/order-items/:id/refund
+退菜（按订单项ID退）
 
 ### GET /dining/dishes
 获取菜品列表
+
+### POST /dining/staff/reservations/:id/checkin (员工)
+员工签到预约
+
+### POST /dining/staff/reservations/:id/cancel (员工)
+员工取消预约
+
+### GET /dining/all-tables (管理员)
+获取所有桌位（管理用）
+
+### POST /dining/tables (管理员)
+创建桌位
+
+### DELETE /dining/tables/:id (管理员)
+删除桌位
 
 ### CRUD /admin/dishes (管理员)
 ### CRUD /admin/tables (管理员)
@@ -134,6 +149,9 @@
 
 ### GET /products
 获取产品列表
+
+### GET /products/:id
+获取产品详情
 
 **Response:**
 ```json
@@ -158,6 +176,9 @@
 ### GET /coupons
 获取我的卡券列表
 
+### GET /coupons/:id
+获取卡券详情
+
 **Response:**
 ```json
 {
@@ -176,10 +197,10 @@
 ### POST /coupons/:id/transfer
 转赠卡券
 
-### POST /service-reservations
+### POST /coupons/service-reservations
 创建服务预约
 
-### DELETE /service-reservations/:id
+### DELETE /coupons/service-reservations/:id
 取消服务预约
 
 ### POST /coupons/verify
@@ -218,7 +239,7 @@
 ### GET /membership/status
 获取会员状态
 
-### POST /admin/membership/grant (管理员)
+### POST /membership/grant (管理员)
 赠送会员
 
 ---
@@ -228,6 +249,9 @@
 ### GET /planting/plots
 获取地块列表
 
+### GET /planting/plots/:id
+获取地块详情
+
 ### POST /planting/plots/:id/rent
 租用地块（生成卡券）
 
@@ -236,6 +260,9 @@
 
 ### POST /planting/service-orders
 下单种植管理服务
+
+### GET /planting/service-orders
+获取我的服务订单列表
 
 **Request:**
 ```json
@@ -274,8 +301,16 @@
 ```
 
 ### CRUD /admin/plots (管理员)
-### CRUD /admin/cameras (管理员)
-### POST /admin/camera-bindings (管理员)
+### GET /planting/cameras (管理员)
+获取摄像头列表
+
+### POST /planting/cameras (管理员)
+创建摄像头
+
+### DELETE /planting/cameras/:id (管理员)
+删除摄像头
+
+### POST /planting/cameras/:cameraId/bind-plot/:plotId (管理员)
 绑定摄像头与地块
 
 ---
@@ -284,6 +319,9 @@
 
 ### GET /journals
 获取日志列表（首页展示）
+
+### GET /journals/:id
+获取日志详情
 
 ### POST /journals
 创建日志
@@ -321,7 +359,23 @@
 
 ---
 
-## 8. 通用响应格式
+## 8. 文件上传模块
+
+### POST /upload
+上传文件（图片等）
+
+**Request:** `multipart/form-data`，字段名 `file`
+
+**Response:**
+```json
+{
+  "url": "/uploads/2026/05/image.jpg"
+}
+```
+
+---
+
+## 9. 通用响应格式
 
 ### 成功响应
 ```json
