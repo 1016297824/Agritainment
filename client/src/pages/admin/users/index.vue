@@ -16,12 +16,12 @@
           <text class="user-phone">{{ user.phone }}</text>
         </view>
         <view class="user-meta">
-          <text v-if="user.is_blacklisted" class="tag blacklist">已拉黑</text>
-          <text v-if="user.is_member" class="tag member">会员</text>
-          <text v-if="user.no_show_count > 0" class="tag noshow">爽约{{ user.no_show_count }}次</text>
+          <text v-if="user.isBlacklisted" class="tag blacklist">已拉黑</text>
+          <text v-if="user.isMember" class="tag member">会员</text>
+          <text v-if="user.noShowCount > 0" class="tag noshow">爽约{{ user.noShowCount }}次</text>
         </view>
         <view class="user-actions">
-          <button v-if="!user.is_blacklisted" class="btn-blacklist" @tap="toggleBlacklist(user.id, true)">拉黑</button>
+          <button v-if="!user.isBlacklisted" class="btn-blacklist" @tap="toggleBlacklist(user.id, true)">拉黑</button>
           <button v-else class="btn-unblacklist" @tap="toggleBlacklist(user.id, false)">解除</button>
           <button v-if="activeTab === 'customer'" class="btn-grant" @tap="grantMember(user.id)">赠会员</button>
           <button v-if="activeTab === 'staff'" class="btn-remove" @tap="removeStaff(user.id)">移除</button>

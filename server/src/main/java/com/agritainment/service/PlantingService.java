@@ -43,6 +43,10 @@ public class PlantingService {
         if (plot == null) throw new AppException(40201, "地块不存在");
         if (!"available".equals(plot.getStatus())) throw new AppException(40202, "地块不可租用");
 
+        Long existingRented = plotMapper.selectCount(new LambdaQueryWrapper<Plot>()
+                .eq(Plot::getRenterId, userId).eq(Plot::getStatus, "rented"));
+        if (existingRented > 0) throw new AppException(40203, "您已租用地块，不可重复租用");
+
         String code = userService.generateCouponCode();
         Coupon coupon = new Coupon();
         coupon.setCode(code);

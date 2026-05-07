@@ -25,22 +25,22 @@
       <view v-if="editConfig" class="config-form">
         <view class="form-row">
           <text class="form-label">年费(元)</text>
-          <input v-model="editConfig.annual_price" type="digit" class="form-input" />
+          <input v-model="editConfig.annualPrice" type="digit" class="form-input" />
         </view>
         <view class="form-row">
           <text class="form-label">折扣率</text>
-          <input v-model="editConfig.discount_rate" type="digit" class="form-input" placeholder="0.8 = 八折" />
+          <input v-model="editConfig.discountRate" type="digit" class="form-input" placeholder="0.8 = 八折" />
         </view>
         <view class="form-row">
           <text class="form-label">赠送产品ID</text>
-          <input v-model="editConfig.gift_product_ids" class="form-input" placeholder="逗号分隔, 如 1,2,3" />
+          <input v-model="editConfig.giftProductIds" class="form-input" placeholder="逗号分隔, 如 1,2,3" />
         </view>
         <button class="btn-save" @tap="saveConfig">保存配置</button>
       </view>
       <view v-else class="config-info">
-        <text>年费: ¥{{ memberConfig.annual_price }}</text>
-        <text>折扣: {{ (memberConfig.discount_rate * 100).toFixed(0) }}%</text>
-        <text>赠送产品: {{ (memberConfig.gift_product_ids || []).length }}个</text>
+        <text>年费: ¥{{ memberConfig.annualPrice }}</text>
+        <text>折扣: {{ ((memberConfig.discountRate || 0) * 100).toFixed(0) }}%</text>
+        <text>赠送产品: {{ (memberConfig.giftProductIds || []).length }}个</text>
       </view>
     </view>
 
@@ -80,9 +80,9 @@ const loadMemberConfig = async () => {
     const data = await membershipApi.getConfig()
     memberConfig.value = data
     editConfig.value = {
-      annual_price: String(data.annual_price || ''),
-      discount_rate: String(data.discount_rate || ''),
-      gift_product_ids: Array.isArray(data.gift_product_ids) ? data.gift_product_ids.join(',') : (data.gift_product_ids || '')
+      annualPrice: String(data.annualPrice || ''),
+      discountRate: String(data.discountRate || ''),
+      giftProductIds: Array.isArray(data.giftProductIds) ? data.giftProductIds.join(',') : (data.giftProductIds || '')
     }
   } catch (err) { /* ignore */ }
 }
@@ -90,9 +90,9 @@ const loadMemberConfig = async () => {
 const saveConfig = async () => {
   try {
     const payload = {
-      annual_price: parseFloat(editConfig.value.annual_price),
-      discount_rate: parseFloat(editConfig.value.discount_rate),
-      gift_product_ids: editConfig.value.gift_product_ids
+      annual_price: parseFloat(editConfig.value.annualPrice),
+      discount_rate: parseFloat(editConfig.value.discountRate),
+      gift_product_ids: editConfig.value.giftProductIds
     }
     await membershipApi.updateConfig(payload)
     uni.showToast({ title: '保存成功', icon: 'success' })

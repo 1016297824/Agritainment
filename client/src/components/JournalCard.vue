@@ -14,9 +14,9 @@
     <view class="journal-footer">
       <view class="journal-meta">
         <text class="journal-author">{{ journal.User?.nickname || '匿名' }}</text>
-        <text class="journal-date">{{ formatDate(journal.created_at) }}</text>
+        <text class="journal-date">{{ formatDate(journal.createdAt) }}</text>
       </view>
-      <view v-if="journal.is_shared" class="shared-badge">
+      <view v-if="journal.isShared" class="shared-badge">
         <text class="shared-text">已分享</text>
       </view>
     </view>

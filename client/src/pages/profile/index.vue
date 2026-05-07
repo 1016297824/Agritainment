@@ -2,11 +2,11 @@
   <view class="page">
     <view v-if="isLoggedIn" class="profile">
       <view class="profile-header">
-        <image class="avatar" :src="userInfo?.avatar_url || '/static/default-avatar.png'" mode="aspectFill" />
+        <image class="avatar" :src="userInfo?.avatarUrl || '/static/default-avatar.png'" mode="aspectFill" />
         <view class="user-info">
           <text class="nickname">{{ userInfo?.nickname || '用户' }}</text>
-          <text class="identity-code">身份码: {{ userInfo?.identity_code }}</text>
-          <view v-if="userInfo?.is_member" class="member-badge">
+          <text class="identity-code">身份码: {{ userInfo?.identityCode }}</text>
+          <view v-if="userInfo?.isMember" class="member-badge">
             <text class="member-text">会员</text>
           </view>
         </view>
@@ -45,7 +45,7 @@
           <text class="menu-label">游玩日志</text>
           <text class="menu-arrow">›</text>
         </view>
-        <view class="menu-item" @tap="goMembership" v-if="!userInfo?.is_member">
+        <view class="menu-item" @tap="goMembership" v-if="!userInfo?.isMember">
           <text class="menu-label">开通会员</text>
           <text class="menu-arrow">›</text>
         </view>

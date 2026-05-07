@@ -15,8 +15,8 @@
       @tap="goEdit(item)"
     />
     <view v-for="item in journals" :key="'act-' + item.id" class="journal-actions-row">
-      <view class="share-btn" :class="{ shared: item.is_shared }" @tap="toggleShare(item)">
-        <text class="share-text">{{ item.is_shared ? '取消分享' : '分享到首页' }}</text>
+      <view class="share-btn" :class="{ shared: item.isShared }" @tap="toggleShare(item)">
+        <text class="share-text">{{ item.isShared ? '取消分享' : '分享到首页' }}</text>
       </view>
     </view>
   </view>
@@ -47,12 +47,12 @@ const goEdit = (item) => {
 
 const toggleShare = async (item) => {
   try {
-    if (item.is_shared) {
+    if (item.isShared) {
       await journalApi.unshareJournal(item.id)
     } else {
       await journalApi.shareJournal(item.id)
     }
-    uni.showToast({ title: item.is_shared ? '已取消分享' : '已分享', icon: 'success' })
+    uni.showToast({ title: item.isShared ? '已取消分享' : '已分享', icon: 'success' })
     loadJournals()
   } catch (e) {}
 }

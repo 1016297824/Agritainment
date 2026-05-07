@@ -4,7 +4,7 @@
       <text class="section-title">我的地块</text>
       <view v-if="myPlot" class="plot-card rented" @tap="viewPlot(myPlot.id)">
         <view class="plot-info">
-          <text class="plot-number">{{ myPlot.plot_number }}</text>
+          <text class="plot-number">{{ myPlot.plotNumber }}</text>
           <text class="plot-name">{{ myPlot.name }}</text>
           <text class="plot-area">{{ myPlot.area }}㎡</text>
         </view>
@@ -17,10 +17,13 @@
 
     <view class="section">
       <text class="section-title">可租用地块</text>
-      <view class="plot-list">
+      <view v-if="myPlot" class="empty-plot">
+        <text class="empty-text">每位客户限租一块地</text>
+      </view>
+      <view v-else class="plot-list">
         <view v-for="p in availablePlots" :key="p.id" class="plot-card" @tap="viewPlot(p.id)">
           <view class="plot-info">
-            <text class="plot-number">{{ p.plot_number }}</text>
+            <text class="plot-number">{{ p.plotNumber }}</text>
             <text class="plot-name">{{ p.name }}</text>
             <text class="plot-area">{{ p.area }}㎡</text>
           </view>
@@ -51,16 +54,25 @@
 
 <script>
 import { plantingApi } from '@/api'
+import { useAuthStore } from '@/stores/auth'
 
 export default {
   data() {
     return { plots: [], gardenServices: [] }
   },
   computed: {
-    myPlot() { return this.plots.find(p => p.renter_id) },
+    myPlot() {
+      const auth = useAuthStore()
+      const uid = auth.userId
+      return uid != null ? this.plots.find(p => p.renterId == uid) : null
+    },
     availablePlots() { return this.plots.filter(p => p.status === 'available') }
   },
-  onShow() { this.loadData() },
+  async onShow() {
+    const auth = useAuthStore()
+    await auth.ensureUserInfo()
+    this.loadData()
+  },
   methods: {
     async loadData() {
       try {

@@ -30,9 +30,9 @@ describe('login handleLogin 逻辑', () => {
 
   it('customer 登录成功后 store.login 内部应 switchTab 到首页', async () => {
     authApi.login.mockResolvedValue({
-      token: 'test-token',
-      user: { id: 1, role: 'customer' }
+      token: 'test-token'
     })
+    authApi.getMe.mockResolvedValue({ id: 1, role: 'customer' })
     authApi.wxLogin.mockResolvedValue({})
 
     const store = useAuthStore()
@@ -43,9 +43,9 @@ describe('login handleLogin 逻辑', () => {
 
   it('admin 登录成功后应 reLaunch 到管理后台', async () => {
     authApi.login.mockResolvedValue({
-      token: 'admin-token',
-      user: { id: 2, role: 'admin' }
+      token: 'admin-token'
     })
+    authApi.getMe.mockResolvedValue({ id: 2, role: 'admin' })
     authApi.wxLogin.mockResolvedValue({})
 
     const store = useAuthStore()
@@ -56,9 +56,9 @@ describe('login handleLogin 逻辑', () => {
 
   it('customer 注册成功后 navigateToRoleHome 应 switchTab 到首页', async () => {
     authApi.register.mockResolvedValue({
-      token: 'new-token',
-      user: { id: 3, role: 'customer' }
+      token: 'new-token'
     })
+    authApi.getMe.mockResolvedValue({ id: 3, role: 'customer' })
     authApi.wxLogin.mockResolvedValue({})
 
     const store = useAuthStore()
@@ -83,9 +83,9 @@ describe('login handleLogin 逻辑', () => {
 
   it('customer 登录成功后不应使用 reLaunch（因为首页是 tabBar 页面）', async () => {
     authApi.login.mockResolvedValue({
-      token: 'test-token',
-      user: { id: 1, role: 'customer' }
+      token: 'test-token'
     })
+    authApi.getMe.mockResolvedValue({ id: 1, role: 'customer' })
     authApi.wxLogin.mockResolvedValue({})
 
     const store = useAuthStore()
