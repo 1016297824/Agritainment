@@ -52,7 +52,7 @@ const newStaffName = ref('')
 const loadUsers = async () => {
   try {
     const data = await adminApi.getUsers(activeTab.value)
-    users.value = data.list || []
+    users.value = data.records || []
   } catch (err) {
     uni.showToast({ title: '加载失败', icon: 'none' })
   }
