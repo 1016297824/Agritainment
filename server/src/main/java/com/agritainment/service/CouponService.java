@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.Coupon;
 import com.agritainment.entity.ServiceReservation;
@@ -41,6 +42,7 @@ public class CouponService {
     }
 
     @Transactional
+    @BusinessLog("转赠优惠券")
     public Coupon transfer(Long userId, Long couponId, Long targetUserId) {
         Coupon coupon = couponMapper.selectById(couponId);
         if (coupon == null || !coupon.getUserId().equals(userId))

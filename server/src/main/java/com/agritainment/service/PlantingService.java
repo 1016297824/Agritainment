@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.*;
 import com.agritainment.mapper.*;
@@ -38,6 +39,7 @@ public class PlantingService {
     }
 
     @Transactional
+    @BusinessLog("租赁地块")
     public Plot rentPlot(Long userId, Long plotId) {
         Plot plot = plotMapper.selectById(plotId);
         if (plot == null) throw new AppException(40201, "地块不存在");
@@ -98,6 +100,7 @@ public class PlantingService {
     }
 
     @Transactional
+    @BusinessLog("完成服务订单")
     public GardenServiceOrder completeServiceOrder(Long orderId, Long staffId) {
         GardenServiceOrder order = gardenServiceOrderMapper.selectById(orderId);
         if (order == null) throw new AppException(40206, "服务订单不存在");
@@ -131,6 +134,7 @@ public class PlantingService {
         return cameraMapper.selectList(new LambdaQueryWrapper<Camera>().orderByAsc(Camera::getId));
     }
 
+    @BusinessLog("绑定摄像头到地块")
     public void bindCameraPlot(Long cameraId, Long plotId) {
         CameraPlotBinding binding = new CameraPlotBinding();
         binding.setCameraId(cameraId);
@@ -139,6 +143,7 @@ public class PlantingService {
     }
 
     @Transactional
+    @BusinessLog("绑定地块到用户")
     public Plot bindPlotToUser(Long plotId, String identityCode) {
         Plot plot = plotMapper.selectById(plotId);
         if (plot == null) throw new AppException(40201, "地块不存在");

@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.*;
 import com.agritainment.enums.RoleEnum;
@@ -169,6 +170,7 @@ public class DiningService {
     }
 
     @Transactional
+    @BusinessLog("结算订单")
     public Order settleOrder(Long orderId) {
         Order order = orderMapper.selectById(orderId);
         if (order == null) throw new AppException(40007, "订单不存在");
@@ -193,6 +195,7 @@ public class DiningService {
         tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, reservation.getTableId()).set(DiningTable::getStatus, "idle"));
     }
 
+    @BusinessLog("员工签到")
     public void staffCheckin(Long reservationId) {
         TableReservation reservation = reservationMapper.selectById(reservationId);
         if (reservation == null) throw new AppException(40004, "预约不存在");
@@ -217,6 +220,7 @@ public class DiningService {
     }
 
     @Transactional
+    @BusinessLog("退菜退款")
     public void refundOrderItem(Long orderItemId) {
         OrderItem item = orderItemMapper.selectById(orderItemId);
         if (item == null) throw new AppException(40008, "订单项不存在");

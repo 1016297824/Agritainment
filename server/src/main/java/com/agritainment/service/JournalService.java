@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.Journal;
 import com.agritainment.mapper.JournalMapper;
@@ -55,6 +56,7 @@ public class JournalService {
         return journal;
     }
 
+    @BusinessLog("分享日志")
     public void shareJournal(Long userId, Long id) {
         Journal journal = journalMapper.selectById(id);
         if (journal == null || !journal.getUserId().equals(userId))
@@ -63,6 +65,7 @@ public class JournalService {
                 .eq(Journal::getId, id).set(Journal::getIsShared, true));
     }
 
+    @BusinessLog("取消分享日志")
     public void unshareJournal(Long userId, Long id) {
         Journal journal = journalMapper.selectById(id);
         if (journal == null || !journal.getUserId().equals(userId))

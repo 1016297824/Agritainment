@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.User;
 import com.agritainment.enums.RoleEnum;
@@ -88,6 +89,7 @@ public class AuthService {
         return user;
     }
 
+    @BusinessLog("绑定微信OpenID")
     public void bindOpenid(Long userId, String openid) {
         if (userId == null || openid == null) return;
         User user = userMapper.selectById(userId);

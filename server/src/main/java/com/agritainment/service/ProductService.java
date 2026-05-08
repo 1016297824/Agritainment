@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.Coupon;
 import com.agritainment.entity.Product;
@@ -37,6 +38,7 @@ public class ProductService {
     }
 
     @Transactional
+    @BusinessLog("购买产品")
     public Coupon purchase(Long userId, Long productId) {
         Product product = productMapper.selectById(productId);
         if (product == null) throw new AppException(40101, "产品不存在");
@@ -66,6 +68,7 @@ public class ProductService {
         return coupon;
     }
 
+    @BusinessLog("核销优惠券")
     public Coupon verifyCoupon(String code) {
         Coupon coupon = couponMapper.selectOne(new LambdaQueryWrapper<Coupon>().eq(Coupon::getCode, code).eq(Coupon::getStatus, "available"));
         if (coupon == null) throw new AppException(40106, "卡券无效或已使用");

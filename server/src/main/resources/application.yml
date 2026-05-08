@@ -43,6 +43,3 @@ app:
         reservation-cancelled: ${WECHAT_TPL_RESERVATION_CANCELLED:}
         service-order-created: ${WECHAT_TPL_SERVICE_ORDER_CREATED:}
 
-logging:
-  level:
-    com.agritainment: DEBUG

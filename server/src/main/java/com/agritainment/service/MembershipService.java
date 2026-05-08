@@ -1,5 +1,6 @@
 package com.agritainment.service;
 
+import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
 import com.agritainment.entity.Coupon;
 import com.agritainment.entity.MembershipConfig;
@@ -41,6 +42,7 @@ public class MembershipService {
     }
 
     @Transactional
+    @BusinessLog("购买会员")
     public Map<String, Object> purchase(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new AppException(40403, "用户不存在");
@@ -112,6 +114,7 @@ public class MembershipService {
     }
 
     @Transactional
+    @BusinessLog("授予会员")
     public void grant(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new AppException(40403, "用户不存在");
