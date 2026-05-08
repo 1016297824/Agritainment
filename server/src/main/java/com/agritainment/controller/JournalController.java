@@ -5,6 +5,7 @@ import com.agritainment.common.Result;
 import com.agritainment.dto.CreateJournalRequest;
 import com.agritainment.dto.UpdateJournalRequest;
 import com.agritainment.entity.Journal;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.service.JournalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,13 @@ public class JournalController {
     private final JournalService journalService;
 
     @GetMapping
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<List<Journal>> getJournals(@RequestAttribute("userId") Long userId) {
         return Result.ok(journalService.getJournals(userId));
     }
 
     @GetMapping("/{id}")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Journal> getJournal(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
         return Result.ok(journalService.getJournal(userId, id));
     }
@@ -37,7 +38,7 @@ public class JournalController {
     }
 
     @PostMapping
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Journal> createJournal(
             @RequestAttribute("userId") Long userId,
             @Valid @RequestBody CreateJournalRequest request) {
@@ -45,7 +46,7 @@ public class JournalController {
     }
 
     @PutMapping("/{id}")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Journal> updateJournal(
             @RequestAttribute("userId") Long userId,
             @PathVariable Long id,
@@ -54,14 +55,14 @@ public class JournalController {
     }
 
     @PostMapping("/{id}/share")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> shareJournal(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
         journalService.shareJournal(userId, id);
         return Result.ok(null);
     }
 
     @DeleteMapping("/{id}/share")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> unshareJournal(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
         journalService.unshareJournal(userId, id);
         return Result.ok(null);

@@ -1,6 +1,7 @@
 package com.agritainment.interceptor;
 
 import com.agritainment.annotation.RequireRole;
+import com.agritainment.enums.RoleEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,14 +21,16 @@ public class RoleInterceptor implements HandlerInterceptor {
         RequireRole annotation = handlerMethod.getMethodAnnotation(RequireRole.class);
         if (annotation == null) return true;
 
-        String userRole = (String) request.getAttribute("role");
-        if (userRole == null) {
+        Object roleAttr = request.getAttribute("role");
+        if (roleAttr == null) {
             sendError(response, 40101, "未登录");
             return false;
         }
 
-        for (String role : annotation.value()) {
-            if (role.equals(userRole)) return true;
+        RoleEnum userRole = roleAttr instanceof RoleEnum r ? r : RoleEnum.fromValue(roleAttr.toString());
+
+        for (RoleEnum role : annotation.value()) {
+            if (role == userRole) return true;
         }
 
         sendError(response, 40301, "权限不足");

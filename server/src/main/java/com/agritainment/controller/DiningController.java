@@ -7,6 +7,7 @@ import com.agritainment.dto.CreateOrderRequest;
 import com.agritainment.dto.CreateReservationRequest;
 import com.agritainment.dto.CreateTableRequest;
 import com.agritainment.entity.*;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.service.DiningService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class DiningController {
     }
 
     @PostMapping("/reservations")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<TableReservation> createReservation(
             @RequestAttribute("userId") Long userId,
             @Valid @RequestBody CreateReservationRequest request) {
@@ -40,7 +41,7 @@ public class DiningController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<TableReservation> cancelReservation(
             @RequestAttribute("userId") Long userId,
             @PathVariable Long id) {
@@ -48,13 +49,13 @@ public class DiningController {
     }
 
     @GetMapping("/reservations")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<List<TableReservation>> getReservations(@RequestAttribute("userId") Long userId) {
         return Result.ok(diningService.getReservations(userId));
     }
 
     @GetMapping("/orders/active")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Object> getActiveOrder(@RequestParam(required = false) String table_qr) {
         if (table_qr != null) {
             return Result.ok(diningService.getActiveOrder(table_qr));
@@ -63,7 +64,7 @@ public class DiningController {
     }
 
     @PostMapping("/orders")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Order> createOrder(
             @RequestAttribute("userId") Long userId,
             @Valid @RequestBody CreateOrderRequest request) {
@@ -77,7 +78,7 @@ public class DiningController {
     }
 
     @PostMapping("/orders/{id}/settle")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Order> settleOrder(@PathVariable Long id) {
         return Result.ok(diningService.settleOrder(id));
     }
@@ -88,47 +89,47 @@ public class DiningController {
     }
 
     @PostMapping("/staff/reservations/{id}/checkin")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> staffCheckin(@PathVariable Long id) {
         diningService.staffCheckin(id);
         return Result.ok(null);
     }
 
     @PostMapping("/staff/reservations/{id}/cancel")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> staffCancel(@PathVariable Long id) {
         diningService.staffCancelReservation(id);
         return Result.ok(null);
     }
 
     @PostMapping("/orders/{id}/change-table")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> changeTable(@PathVariable Long id, @Valid @RequestBody ChangeTableRequest request) {
         diningService.changeTable(id, request.getNew_table_id());
         return Result.ok(null);
     }
 
     @PostMapping("/order-items/{id}/refund")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> refundOrderItem(@PathVariable Long id) {
         diningService.refundOrderItem(id);
         return Result.ok(null);
     }
 
     @GetMapping("/all-tables")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<List<DiningTable>> getAllTables() {
         return Result.ok(diningService.getAllTables());
     }
 
     @PostMapping("/tables")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<DiningTable> createTable(@Valid @RequestBody CreateTableRequest request) {
         return Result.ok(diningService.createTable(request.getTable_number(), request.getCapacity()));
     }
 
     @DeleteMapping("/tables/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> deleteTable(@PathVariable Long id) {
         diningService.deleteTable(id);
         return Result.ok(null);

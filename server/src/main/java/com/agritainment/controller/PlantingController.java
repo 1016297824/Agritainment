@@ -10,6 +10,7 @@ import com.agritainment.entity.Camera;
 import com.agritainment.entity.GardenService;
 import com.agritainment.entity.GardenServiceOrder;
 import com.agritainment.entity.Plot;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.service.PlantingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class PlantingController {
     }
 
     @PostMapping("/plots/{id}/rent")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Plot> rentPlot(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
         return Result.ok(plantingService.rentPlot(userId, id));
     }
@@ -47,7 +48,7 @@ public class PlantingController {
     }
 
     @PostMapping("/service-orders")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<GardenServiceOrder> createServiceOrder(
             @RequestAttribute("userId") Long userId,
             @Valid @RequestBody CreateServiceOrderRequest request) {
@@ -55,19 +56,19 @@ public class PlantingController {
     }
 
     @GetMapping("/service-orders")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<List<GardenServiceOrder>> getServiceOrders(@RequestAttribute("userId") Long userId) {
         return Result.ok(plantingService.getServiceOrders(userId));
     }
 
     @GetMapping("/cameras/{id}/status")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Map<String, Object>> getCameraStatus(@PathVariable Long id) {
         return Result.ok(plantingService.getCameraStatus(id));
     }
 
     @PostMapping("/cameras/{id}/control")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Map<String, Object>> controlCamera(
             @PathVariable Long id,
             @Valid @RequestBody ControlCameraRequest request) {
@@ -75,7 +76,7 @@ public class PlantingController {
     }
 
     @PostMapping("/service-orders/{id}/complete")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<GardenServiceOrder> completeServiceOrder(
             @PathVariable Long id,
             @RequestAttribute("userId") Long staffId) {
@@ -83,33 +84,33 @@ public class PlantingController {
     }
 
     @GetMapping("/cameras")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<List<Camera>> getCameras() {
         return Result.ok(plantingService.getCameras());
     }
 
     @PostMapping("/cameras")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Camera> createCamera(@Valid @RequestBody CreateCameraRequest request) {
         return Result.ok(plantingService.createCamera(request.getIdentifier(), request.getName(), request.getIp_address()));
     }
 
     @DeleteMapping("/cameras/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> deleteCamera(@PathVariable Long id) {
         plantingService.deleteCamera(id);
         return Result.ok(null);
     }
 
     @PostMapping("/cameras/{cameraId}/bind-plot/{plotId}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> bindCameraPlot(@PathVariable Long cameraId, @PathVariable Long plotId) {
         plantingService.bindCameraPlot(cameraId, plotId);
         return Result.ok(null);
     }
 
     @PostMapping("/plots/{id}/bind")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Plot> bindPlotToUser(@PathVariable Long id, @RequestBody Map<String, String> body) {
         String identityCode = body.get("identity_code");
         if (identityCode == null || identityCode.isBlank()) throw new AppException(40001, "identity_code 不能为空");

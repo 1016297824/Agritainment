@@ -2,6 +2,7 @@ package com.agritainment.service;
 
 import com.agritainment.common.AppException;
 import com.agritainment.entity.*;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -29,7 +30,7 @@ public class AdminService {
 
     public Page<User> getUsers(String role, int page, int pageSize) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        if (role != null) wrapper.eq(User::getRole, role);
+        if (role != null) wrapper.eq(User::getRole, RoleEnum.fromValue(role));
         wrapper.orderByDesc(User::getCreatedAt);
         return userMapper.selectPage(new Page<>(page, pageSize), wrapper);
     }
@@ -37,7 +38,7 @@ public class AdminService {
     public User createStaff(String phone, String nickname) {
         User existing = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, phone));
         if (existing != null) {
-            existing.setRole("staff");
+            existing.setRole(RoleEnum.STAFF);
             userMapper.updateById(existing);
             return existing;
         }
@@ -45,7 +46,7 @@ public class AdminService {
         user.setPhone(phone);
         user.setIdentityCode(userService.generateIdentityCode());
         user.setNickname(nickname);
-        user.setRole("staff");
+        user.setRole(RoleEnum.STAFF);
         user.setIsMember(false);
         user.setNoShowCount(0);
         user.setIsBlacklisted(false);
@@ -55,15 +56,15 @@ public class AdminService {
 
     public void deleteStaff(Long id) {
         User user = userMapper.selectById(id);
-        if (user == null || !"staff".equals(user.getRole())) throw new AppException(40403, "员工不存在");
-        user.setRole("customer");
+        if (user == null || user.getRole() != RoleEnum.STAFF) throw new AppException(40403, "员工不存在");
+        user.setRole(RoleEnum.CUSTOMER);
         userMapper.updateById(user);
     }
 
     public Map<String, Object> getDashboard() {
         Map<String, Object> data = new HashMap<>();
-        data.put("customerCount", userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getRole, "customer")));
-        data.put("staffCount", userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getRole, "staff")));
+        data.put("customerCount", userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getRole, RoleEnum.CUSTOMER)));
+        data.put("staffCount", userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getRole, RoleEnum.STAFF)));
         data.put("memberCount", userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getIsMember, true)));
         data.put("tableCount", tableMapper.selectCount(null));
         data.put("productCount", productMapper.selectCount(null));

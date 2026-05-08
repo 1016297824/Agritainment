@@ -7,6 +7,7 @@ import com.agritainment.dto.TransferCouponRequest;
 import com.agritainment.dto.VerifyCouponRequest;
 import com.agritainment.entity.Coupon;
 import com.agritainment.entity.ServiceReservation;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.service.CouponService;
 import com.agritainment.service.ProductService;
 import jakarta.validation.Valid;
@@ -24,19 +25,19 @@ public class CouponController {
     private final ProductService productService;
 
     @GetMapping
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<List<Coupon>> getCoupons(@RequestAttribute("userId") Long userId) {
         return Result.ok(couponService.getCoupons(userId));
     }
 
     @GetMapping("/{id}")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Coupon> getCoupon(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
         return Result.ok(couponService.getCoupon(userId, id));
     }
 
     @PostMapping("/{id}/transfer")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Coupon> transfer(
             @RequestAttribute("userId") Long userId,
             @PathVariable Long id,
@@ -45,13 +46,13 @@ public class CouponController {
     }
 
     @PostMapping("/verify")
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Coupon> verifyCoupon(@Valid @RequestBody VerifyCouponRequest request) {
         return Result.ok(productService.verifyCoupon(request.getCode()));
     }
 
     @PostMapping("/service-reservations")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<ServiceReservation> createServiceReservation(
             @RequestAttribute("userId") Long userId,
             @Valid @RequestBody CreateServiceReservationRequest request) {
@@ -59,7 +60,7 @@ public class CouponController {
     }
 
     @DeleteMapping("/service-reservations/{id}")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Void> cancelServiceReservation(
             @RequestAttribute("userId") Long userId,
             @PathVariable Long id) {

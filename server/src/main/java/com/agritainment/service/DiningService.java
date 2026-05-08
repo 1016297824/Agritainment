@@ -2,6 +2,7 @@ package com.agritainment.service;
 
 import com.agritainment.common.AppException;
 import com.agritainment.entity.*;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -96,7 +97,7 @@ public class DiningService {
         boolean isLateCancel = userService.checkNoShow(userId, reservationTime);
 
         reservation.setStatus("cancelled");
-        reservation.setCancelledBy("customer");
+        reservation.setCancelledBy(RoleEnum.CUSTOMER.getValue());
         reservation.setIsLateCancel(isLateCancel);
         reservationMapper.updateById(reservation);
 
@@ -186,7 +187,7 @@ public class DiningService {
         LocalDateTime reservationTime = LocalDateTime.of(reservation.getReservationDate(), slotTime);
         boolean isLateCancel = userService.checkNoShow(reservation.getUserId(), reservationTime);
         reservation.setStatus("cancelled");
-        reservation.setCancelledBy("staff");
+        reservation.setCancelledBy(RoleEnum.STAFF.getValue());
         reservation.setIsLateCancel(isLateCancel);
         reservationMapper.updateById(reservation);
         tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, reservation.getTableId()).set(DiningTable::getStatus, "idle"));

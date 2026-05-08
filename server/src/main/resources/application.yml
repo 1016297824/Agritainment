@@ -20,6 +20,7 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+  type-enums-package: com.agritainment.enums
 
 jwt:
   secret: agritainment-secret-key-must-be-at-least-256-bits-long-for-hs256

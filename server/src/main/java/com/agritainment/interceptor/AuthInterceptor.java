@@ -1,5 +1,6 @@
 package com.agritainment.interceptor;
 
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             String token = authHeader.substring(7);
             var claims = jwtUtil.parseToken(token);
             request.setAttribute("userId", Long.parseLong(claims.getSubject()));
-            request.setAttribute("role", claims.get("role", String.class));
+            request.setAttribute("role", RoleEnum.fromValue(claims.get("role", String.class)));
             request.setAttribute("isMember", claims.get("isMember", Boolean.class));
             return true;
         } catch (Exception e) {

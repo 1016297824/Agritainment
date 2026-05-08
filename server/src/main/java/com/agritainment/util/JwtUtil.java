@@ -1,5 +1,6 @@
 package com.agritainment.util;
 
+import com.agritainment.enums.RoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -23,11 +24,11 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Long userId, String phone, String role, boolean isMember) {
+    public String generateToken(Long userId, String phone, RoleEnum role, boolean isMember) {
         return Jwts.builder()
                 .subject(userId.toString())
                 .claim("phone", phone)
-                .claim("role", role)
+                .claim("role", role.getValue())
                 .claim("isMember", isMember)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))

@@ -1,10 +1,12 @@
 package com.agritainment.annotation;
 
+import com.agritainment.enums.RoleEnum;
+
 import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface RequireRole {
-    String[] value() default {};
+    RoleEnum[] value() default {};
 }

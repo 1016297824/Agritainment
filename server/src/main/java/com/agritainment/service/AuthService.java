@@ -2,6 +2,7 @@ package com.agritainment.service;
 
 import com.agritainment.common.AppException;
 import com.agritainment.entity.User;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.mapper.UserMapper;
 import com.agritainment.util.JwtUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -55,12 +56,12 @@ public class AuthService {
         User user = new User();
         user.setPhone(phone);
         user.setIdentityCode(userService.generateIdentityCode());
-        user.setRole("customer");
+        user.setRole(RoleEnum.CUSTOMER);
         user.setIsMember(false);
         user.setNoShowCount(0);
         user.setIsBlacklisted(false);
         userMapper.insert(user);
-        return jwtUtil.generateToken(user.getId(), phone, "customer", false);
+        return jwtUtil.generateToken(user.getId(), phone, RoleEnum.CUSTOMER, false);
     }
 
     public String login(String phone, String code) {
@@ -73,11 +74,11 @@ public class AuthService {
 
     public String adminLogin(String phone, String password) {
         if (phone == null || password == null) throw new AppException(40401, "手机号和密码不能为空");
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, phone).eq(User::getRole, "admin"));
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, phone).eq(User::getRole, RoleEnum.ADMIN));
         if (user == null) throw new AppException(40403, "管理员账号不存在");
         if (user.getPassword() == null || !BCrypt.checkpw(password, user.getPassword()))
             throw new AppException(40404, "密码错误");
-        return jwtUtil.generateToken(user.getId(), phone, "admin", false);
+        return jwtUtil.generateToken(user.getId(), phone, RoleEnum.ADMIN, false);
     }
 
     public User getUserInfo(Long userId) {

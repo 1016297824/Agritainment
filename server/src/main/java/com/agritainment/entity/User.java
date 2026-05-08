@@ -1,5 +1,6 @@
 package com.agritainment.entity;
 
+import com.agritainment.enums.RoleEnum;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ public class User {
     private String identityCode;
     private String nickname;
     private String avatarUrl;
-    private String role;
+    private RoleEnum role;
     private Boolean isMember;
     private LocalDate memberExpireAt;
     private Integer noShowCount;

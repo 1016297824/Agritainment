@@ -2,6 +2,7 @@ package com.agritainment.controller;
 
 import com.agritainment.annotation.RequireRole;
 import com.agritainment.common.Result;
+import com.agritainment.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public class UploadController {
     private String uploadPath;
 
     @PostMapping
-    @RequireRole({"staff", "admin"})
+    @RequireRole({RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Map<String, String>> upload(@RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) return Result.error(40001, "文件不能为空");
 

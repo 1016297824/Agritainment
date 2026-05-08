@@ -10,6 +10,7 @@ import com.agritainment.dto.UpdateDishRequest;
 import com.agritainment.dto.UpdateProductRequest;
 import com.agritainment.dto.UpdateUserStatusRequest;
 import com.agritainment.entity.*;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.service.AdminService;
 import com.agritainment.service.MembershipService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -28,13 +29,13 @@ public class AdminController {
     private final MembershipService membershipService;
 
     @GetMapping("/dashboard")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Map<String, Object>> getDashboard() {
         return Result.ok(adminService.getDashboard());
     }
 
     @GetMapping("/users")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Page<User>> getUsers(
             @RequestParam(required = false) String role,
             @RequestParam(defaultValue = "1") int page,
@@ -43,7 +44,7 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}/status")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<User> updateUserStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserStatusRequest request) {
@@ -51,20 +52,20 @@ public class AdminController {
     }
 
     @PostMapping("/staff")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<User> createStaff(@Valid @RequestBody CreateStaffRequest request) {
         return Result.ok(adminService.createStaff(request.getPhone(), request.getNickname()));
     }
 
     @DeleteMapping("/staff/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> deleteStaff(@PathVariable Long id) {
         adminService.deleteStaff(id);
         return Result.ok(null);
     }
 
     @PostMapping("/dishes")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Dish> createDish(@Valid @RequestBody CreateDishRequest request) {
         return Result.ok(adminService.createDish(
                 request.getName(), request.getPrice(), request.getImage_url(),
@@ -72,7 +73,7 @@ public class AdminController {
     }
 
     @PutMapping("/dishes/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Dish> updateDish(@PathVariable Long id, @Valid @RequestBody UpdateDishRequest request) {
         return Result.ok(adminService.updateDish(id,
                 request.getName(), request.getPrice(), request.getImage_url(),
@@ -80,14 +81,14 @@ public class AdminController {
     }
 
     @DeleteMapping("/dishes/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> deleteDish(@PathVariable Long id) {
         adminService.deleteDish(id);
         return Result.ok(null);
     }
 
     @PostMapping("/products")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Product> createProduct(@Valid @RequestBody CreateProductRequest request) {
         return Result.ok(adminService.createProduct(
                 request.getName(), request.getType(), request.getPrice(),
@@ -96,7 +97,7 @@ public class AdminController {
     }
 
     @PutMapping("/products/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody UpdateProductRequest request) {
         return Result.ok(adminService.updateProduct(id,
                 request.getName(), request.getType(), request.getPrice(),
@@ -105,14 +106,14 @@ public class AdminController {
     }
 
     @DeleteMapping("/products/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> deleteProduct(@PathVariable Long id) {
         adminService.deleteProduct(id);
         return Result.ok(null);
     }
 
     @PostMapping("/plots")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Plot> createPlot(@Valid @RequestBody CreatePlotRequest request) {
         return Result.ok(adminService.createPlot(
                 request.getPlot_number(), request.getName(),
@@ -120,20 +121,20 @@ public class AdminController {
     }
 
     @DeleteMapping("/plots/{id}")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<Void> deletePlot(@PathVariable Long id) {
         adminService.deletePlot(id);
         return Result.ok(null);
     }
 
     @GetMapping("/membership-config")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<MembershipConfig> getMembershipConfig() {
         return Result.ok(membershipService.getConfig());
     }
 
     @PutMapping("/membership-config")
-    @RequireRole({"admin"})
+    @RequireRole({RoleEnum.ADMIN})
     public Result<MembershipConfig> updateMembershipConfig(@RequestBody Map<String, Object> body) {
         Double annualPrice = body.get("annual_price") != null ? Double.valueOf(body.get("annual_price").toString()) : null;
         Double discountRate = body.get("discount_rate") != null ? Double.valueOf(body.get("discount_rate").toString()) : null;

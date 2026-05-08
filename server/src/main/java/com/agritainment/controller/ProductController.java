@@ -3,6 +3,7 @@ package com.agritainment.controller;
 import com.agritainment.annotation.RequireRole;
 import com.agritainment.common.Result;
 import com.agritainment.entity.Product;
+import com.agritainment.enums.RoleEnum;
 import com.agritainment.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/purchase")
-    @RequireRole({"customer", "staff", "admin"})
+    @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
     public Result<Object> purchase(
             @RequestAttribute("userId") Long userId,
             @PathVariable Long id) {
