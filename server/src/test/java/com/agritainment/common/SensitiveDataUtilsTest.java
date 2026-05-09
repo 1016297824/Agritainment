@@ -67,19 +67,25 @@ class SensitiveDataUtilsTest {
     }
 
     @Nested
-    @DisplayName("maskPassword / maskSmsCode")
+    @DisplayName("maskParam - password/smsCode/verifyCode 全掩码")
     class MaskFixed {
 
         @Test
-        @DisplayName("密码脱敏为6星号")
+        @DisplayName("密码通过maskParam脱敏为6星号")
         void password() {
-            assertThat(SensitiveDataUtils.maskPassword()).isEqualTo("******");
+            assertThat(SensitiveDataUtils.maskParam("password", "mySecret123")).isEqualTo("******");
         }
 
         @Test
-        @DisplayName("验证码脱敏为6星号")
+        @DisplayName("验证码通过maskParam脱敏为6星号")
         void smsCode() {
-            assertThat(SensitiveDataUtils.maskSmsCode()).isEqualTo("******");
+            assertThat(SensitiveDataUtils.maskParam("smsCode", "654321")).isEqualTo("******");
+        }
+
+        @Test
+        @DisplayName("verifyCode通过maskParam脱敏为6星号")
+        void verifyCode() {
+            assertThat(SensitiveDataUtils.maskParam("verifyCode", "abc123")).isEqualTo("******");
         }
     }
 
@@ -135,9 +141,27 @@ class SensitiveDataUtilsTest {
     class MaskParam {
 
         @Test
-        @DisplayName("敏感参数返回脱敏值")
-        void sensitiveParam() {
-            assertThat(SensitiveDataUtils.maskParam("smsCode", "123456")).isEqualTo("******");
+        @DisplayName("phone参数使用部分脱敏")
+        void phonePartialMask() {
+            assertThat(SensitiveDataUtils.maskParam("phone", "13812341234")).isEqualTo("138****1234");
+        }
+
+        @Test
+        @DisplayName("openid参数使用部分脱敏")
+        void openidPartialMask() {
+            assertThat(SensitiveDataUtils.maskParam("openid", "oXxYy1234Zz")).isEqualTo("oXxYy****Zz");
+        }
+
+        @Test
+        @DisplayName("identityCode参数使用部分脱敏")
+        void identityCodePartialMask() {
+            assertThat(SensitiveDataUtils.maskParam("identityCode", "1101234567891234")).isEqualTo("110****1234");
+        }
+
+        @Test
+        @DisplayName("敏感参数password返回全掩码")
+        void sensitiveParamPassword() {
+            assertThat(SensitiveDataUtils.maskParam("password", "123456")).isEqualTo("******");
         }
 
         @Test

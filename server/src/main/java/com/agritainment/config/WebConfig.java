@@ -50,9 +50,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean<RequestLoggingFilter> requestLoggingFilterRegistration(RequestLoggingFilter filter) {
+    public FilterRegistrationBean<RequestLoggingFilter> requestLoggingFilterRegistration() {
         FilterRegistrationBean<RequestLoggingFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(filter);
+        registration.setFilter(new RequestLoggingFilter());
         registration.addUrlPatterns("/api/v1/*");
         registration.setOrder(1);
         return registration;

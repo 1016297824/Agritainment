@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 @Aspect
@@ -27,7 +29,7 @@ public class BusinessLogAspect implements Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE;
+        return Ordered.HIGHEST_PRECEDENCE + 1;
     }
 
     @Around("execution(* com.agritainment.service..*Service.*(..))")
@@ -62,7 +64,7 @@ public class BusinessLogAspect implements Ordered {
             throw e;
         }
 
-        String resultSummary = result != null ? SensitiveDataUtils.truncate(result.toString()) : "void";
+        String resultSummary = summarizeResult(result);
         log.info("[BIZ_OK] action={} class={} method={} params={} result={}",
                 action, className, methodName, params, resultSummary);
         return result;
@@ -74,10 +76,27 @@ public class BusinessLogAspect implements Ordered {
         for (int i = 0; i < paramNames.length; i++) {
             if (i > 0) sb.append(", ");
             sb.append(paramNames[i]).append("=");
-            String value = args[i] != null ? args[i].toString() : "null";
-            sb.append(SensitiveDataUtils.maskParam(paramNames[i], value));
+            if (args[i] == null) {
+                sb.append("null");
+            } else if (args[i] instanceof String s) {
+                sb.append(SensitiveDataUtils.maskParam(paramNames[i], s));
+            } else if (args[i] instanceof Number || args[i] instanceof Boolean) {
+                sb.append(args[i]);
+            } else {
+                sb.append(args[i].getClass().getSimpleName())
+                        .append("@").append(Integer.toHexString(System.identityHashCode(args[i])));
+            }
         }
         sb.append("}");
         return SensitiveDataUtils.truncate(sb.toString());
+    }
+
+    private String summarizeResult(Object result) {
+        if (result == null) return "void";
+        if (result instanceof String s) return SensitiveDataUtils.truncate(s);
+        if (result instanceof Number || result instanceof Boolean) return result.toString();
+        if (result instanceof Map<?, ?> m) return "Map(size=" + m.size() + ")";
+        if (result instanceof Collection<?> c) return result.getClass().getSimpleName() + "(size=" + c.size() + ")";
+        return result.getClass().getSimpleName();
     }
 }

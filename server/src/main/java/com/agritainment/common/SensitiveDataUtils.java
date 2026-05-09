@@ -2,21 +2,22 @@ package com.agritainment.common;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public final class SensitiveDataUtils {
 
     private static final int MAX_PARAM_LENGTH = 500;
 
-    private static final Map<String, Supplier<String>> SENSITIVE_PARAM_MASKS = new LinkedHashMap<>();
+    private static final Map<String, Function<String, String>> SENSITIVE_PARAM_MASKS = new LinkedHashMap<>();
 
     static {
-        SENSITIVE_PARAM_MASKS.put("phone", () -> "****");
-        SENSITIVE_PARAM_MASKS.put("openid", () -> "****");
-        SENSITIVE_PARAM_MASKS.put("password", () -> "******");
-        SENSITIVE_PARAM_MASKS.put("smsCode", () -> "******");
-        SENSITIVE_PARAM_MASKS.put("verifyCode", () -> "******");
-        SENSITIVE_PARAM_MASKS.put("identityCode", () -> "****");
+        SENSITIVE_PARAM_MASKS.put("phone", SensitiveDataUtils::maskPhone);
+        SENSITIVE_PARAM_MASKS.put("openid", SensitiveDataUtils::maskOpenid);
+        SENSITIVE_PARAM_MASKS.put("identityCode", SensitiveDataUtils::maskIdentityCode);
+        SENSITIVE_PARAM_MASKS.put("password", v -> "******");
+        SENSITIVE_PARAM_MASKS.put("smsCode", v -> "******");
+        SENSITIVE_PARAM_MASKS.put("verifyCode", v -> "******");
+        SENSITIVE_PARAM_MASKS.put("code", v -> "******");
     }
 
     private SensitiveDataUtils() {}
@@ -36,22 +37,14 @@ public final class SensitiveDataUtils {
         return code.substring(0, 3) + "****" + code.substring(code.length() - 4);
     }
 
-    public static String maskPassword() {
-        return "******";
-    }
-
-    public static String maskSmsCode() {
-        return "******";
-    }
-
     public static boolean isSensitiveParam(String paramName) {
         return SENSITIVE_PARAM_MASKS.containsKey(paramName);
     }
 
     public static String maskParam(String paramName, String value) {
         if (value == null) return null;
-        Supplier<String> masker = SENSITIVE_PARAM_MASKS.get(paramName);
-        if (masker != null) return masker.get();
+        Function<String, String> masker = SENSITIVE_PARAM_MASKS.get(paramName);
+        if (masker != null) return masker.apply(value);
         return truncate(value);
     }
 

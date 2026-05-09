@@ -60,8 +60,8 @@ class LoggingInterceptorTest {
     class AfterCompletion {
 
         @Test
-        @DisplayName("清除MDC中requestId/userId/role")
-        void clearsMdc() throws Exception {
+        @DisplayName("afterCompletion不主动清除MDC（由RequestLoggingFilter统一管理）")
+        void doesNotClearMdc() throws Exception {
             MockHttpServletRequest request = new MockHttpServletRequest();
             interceptor.preHandle(request, new MockHttpServletResponse(), new Object());
             MDC.put("userId", "123");
@@ -69,9 +69,9 @@ class LoggingInterceptorTest {
 
             interceptor.afterCompletion(request, new MockHttpServletResponse(), new Object(), null);
 
-            assertThat(MDC.get("requestId")).isNull();
-            assertThat(MDC.get("userId")).isNull();
-            assertThat(MDC.get("role")).isNull();
+            assertThat(MDC.get("requestId")).isNotNull();
+            assertThat(MDC.get("userId")).isEqualTo("123");
+            assertThat(MDC.get("role")).isEqualTo("admin");
         }
     }
 }
