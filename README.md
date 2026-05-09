@@ -161,3 +161,38 @@ cd client; npx vite build
 # 前端 H5 预览（无需微信开发者工具）
 cd client; npm run dev:h5
 ```
+
+## 日志系统
+
+日志写入 `server/logs/` 目录，启动后自动生成。所有日志通过 `requestId` 串联同一请求的完整链路。
+
+### 日志文件
+
+| 文件 | 级别 | 保留 | 说明 |
+|------|------|------|------|
+| **system.log** | INFO+ | 30天 | 系统综合日志（框架、SQL、定时任务） |
+| **access.log** | INFO+ | 30天 | HTTP 请求访问日志（方法、路径、状态码、耗时），慢请求(>3s)标记 |
+| **business.log** | INFO+ | 30天 | 业务写操作日志（创建/修改/删除等），自动脱敏手机号/openid/密码 |
+| **security.log** | INFO+ | 30天 | 安全审计日志（认证失败、权限不足、黑名单拦截） |
+| **error.log** | WARN+ | 90天 | 集中错误日志，收集所有 WARN 及以上级别 |
+
+### 日志格式
+
+```
+2026-05-09 18:23:08.410 [线程名] [req:requestId][user:userId] 级别 Logger名 - 消息体
+```
+
+### 开发 vs 生产
+
+| 环境 | 控制台 | 文件 | 日志级别 |
+|------|--------|------|----------|
+| 开发（default profile） | ✅ 输出 | ✅ 写入 | DEBUG（com.agritainment）/ INFO（根） |
+| 生产（prod profile） | ❌ 不输出 | ✅ 写入 | INFO（com.agritainment）/ WARN（根） |
+
+### 关键特性
+
+- **异步写入**：所有文件通过 `AsyncAppender` 写入，不阻塞业务线程
+- **安全零丢失**：安全/错误日志 `discardingThreshold=0`，队列满时阻塞等待而非丢弃
+- **安全审计持久化**：认证/鉴权/黑名单事件除写入 security.log 外，同时异步写入数据库 `security_audit_log` 表，进程重启不丢失
+- **敏感数据脱敏**：手机号前3后4、openid/身份码部分隐藏、密码/验证码完全替换为 `******`
+- **参数截断**：单个日志参数超过 500 字符自动截断，防止日志膨胀
