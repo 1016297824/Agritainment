@@ -2,7 +2,6 @@ package com.agritainment.interceptor;
 
 import com.agritainment.annotation.RequireRole;
 import com.agritainment.enums.RoleEnum;
-import com.agritainment.service.SecurityAuditLogService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,9 +21,6 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("RoleInterceptor - 角色权限检查与安全审计")
 class RoleInterceptorTest {
-
-    @Mock
-    private SecurityAuditLogService auditLogService;
 
     @InjectMocks
     private RoleInterceptor roleInterceptor;

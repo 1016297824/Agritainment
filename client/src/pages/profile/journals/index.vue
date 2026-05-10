@@ -2,11 +2,11 @@
   <view class="journals-page">
     <view class="actions">
       <view class="create-btn" @tap="goCreate">
-        <text class="create-text">写日志</text>
+        <text class="create-text">发动态</text>
       </view>
     </view>
     <view v-if="journals.length === 0" class="empty">
-      <text class="empty-text">暂无日志</text>
+      <text class="empty-text">暂无动态</text>
     </view>
     <JournalCard
       v-for="item in journals"

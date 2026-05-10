@@ -25,7 +25,7 @@ public class JournalService {
     public Journal getJournal(Long userId, Long id) {
         Journal journal = journalMapper.selectOne(new LambdaQueryWrapper<Journal>()
                 .eq(Journal::getId, id).eq(Journal::getUserId, userId));
-        if (journal == null) throw new AppException(40405, "日记不存在");
+        if (journal == null) throw new AppException(40405, "动态不存在");
         return journal;
     }
 
@@ -48,7 +48,7 @@ public class JournalService {
     public Journal updateJournal(Long userId, Long id, String title, String content, String images) {
         Journal journal = journalMapper.selectById(id);
         if (journal == null || !journal.getUserId().equals(userId))
-            throw new AppException(40501, "日记不存在");
+            throw new AppException(40501, "动态不存在");
         journal.setTitle(title);
         journal.setContent(content);
         journal.setImages(images);
@@ -56,7 +56,7 @@ public class JournalService {
         return journal;
     }
 
-    @BusinessLog("分享日志")
+    @BusinessLog("分享动态")
     public void shareJournal(Long userId, Long id) {
         Journal journal = journalMapper.selectById(id);
         if (journal == null || !journal.getUserId().equals(userId))
@@ -65,7 +65,7 @@ public class JournalService {
                 .eq(Journal::getId, id).set(Journal::getIsShared, true));
     }
 
-    @BusinessLog("取消分享日志")
+    @BusinessLog("取消分享动态")
     public void unshareJournal(Long userId, Long id) {
         Journal journal = journalMapper.selectById(id);
         if (journal == null || !journal.getUserId().equals(userId))

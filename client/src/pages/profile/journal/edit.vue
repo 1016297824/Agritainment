@@ -1,11 +1,11 @@
 <template>
   <view class="page">
     <view class="section">
-      <text class="section-title">{{ isEdit ? '编辑日志' : '写日志' }}</text>
+      <text class="section-title">{{ isEdit ? '编辑动态' : '发动态' }}</text>
 
       <view class="form-group">
         <text class="form-label">标题</text>
-        <input v-model="form.title" class="form-input" placeholder="给日志起个标题" />
+        <input v-model="form.title" class="form-input" placeholder="给动态起个标题" />
       </view>
 
       <view class="form-group">

@@ -2,13 +2,11 @@ package com.agritainment.service;
 
 import com.agritainment.annotation.BusinessLog;
 import com.agritainment.common.AppException;
-import com.agritainment.common.IpUtils;
 import com.agritainment.entity.*;
 import com.agritainment.enums.RoleEnum;
 import com.agritainment.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +32,6 @@ public class DiningService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final NotificationService notificationService;
-    private final SecurityAuditLogService securityAuditLogService;
-    private final HttpServletRequest request;
 
     private static final Logger secLog = LoggerFactory.getLogger("SECURITY");
 
@@ -70,9 +66,6 @@ public class DiningService {
         if (Boolean.TRUE.equals(dbUser.getIsBlacklisted())) {
             secLog.warn("[BLACKLIST_BLOCKED] userId={} phone={} path=/api/v1/dining/reservations detail=黑名单用户尝试预约",
                     userId, dbUser.getPhone());
-            securityAuditLogService.logAsync("BLACKLIST_BLOCKED", userId, null,
-                    "/api/v1/dining/reservations", "黑名单用户尝试预约，phone=" + dbUser.getPhone(),
-                    IpUtils.getClientIp(request));
             throw new AppException(40001, "您已被加入黑名单，无法预约");
         }
 

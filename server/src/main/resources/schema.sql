@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS garden_service_orders (
     FOREIGN KEY (coupon_id) REFERENCES coupons(id)
 );
 
--- 种植日记表
+-- 朋友圈动态表
 CREATE TABLE IF NOT EXISTS journals (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -236,18 +236,3 @@ CREATE TABLE IF NOT EXISTS journals (
 -- CREATE INDEX idx_coupons_code ON coupons(code);
 -- CREATE INDEX idx_plots_status ON plots(status);
 -- CREATE INDEX idx_journals_user ON journals(user_id);
-
--- 安全审计日志表
-CREATE TABLE IF NOT EXISTS security_audit_log (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    event_type VARCHAR(50) NOT NULL,
-    user_id BIGINT,
-    role VARCHAR(20),
-    path VARCHAR(255),
-    detail VARCHAR(500),
-    ip VARCHAR(50),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_audit_event_type (event_type),
-    INDEX idx_audit_user_id (user_id),
-    INDEX idx_audit_created_at (created_at)
-);

@@ -288,7 +288,7 @@ Content-Type: application/json
 | `/api/v1/auth/register` | 注册 |
 | `/api/v1/auth/admin-login` | 管理员登录 |
 | `/api/v1/auth/sms-code` | 发送验证码 |
-| `/api/v1/journals/shared` | 公开日志 |
+| `/api/v1/journals/shared` | 公开动态 |
 | `/api/v1/products` | 公开产品列表 |
 | `/api/v1/products/{id}` | 公开产品详情 |
 | `/api/v1/dining/dishes` | 公开菜品列表 |

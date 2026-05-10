@@ -2,7 +2,6 @@ package com.agritainment.interceptor;
 
 import com.agritainment.common.IpUtils;
 import com.agritainment.enums.RoleEnum;
-import com.agritainment.service.SecurityAuditLogService;
 import com.agritainment.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,11 +24,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     private static final Logger secLog = LoggerFactory.getLogger("SECURITY");
 
     private final JwtUtil jwtUtil;
-    private final SecurityAuditLogService auditLogService;
 
-    public AuthInterceptor(JwtUtil jwtUtil, SecurityAuditLogService auditLogService) {
+    public AuthInterceptor(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.auditLogService = auditLogService;
     }
 
     @Override
@@ -78,7 +75,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         String ip = IpUtils.getClientIp(request);
         secLog.warn("[SECURITY] event={} userId={} role={} path={} ip={}",
                 eventType, userId, role, request.getRequestURI(), ip);
-        auditLogService.logAsync(eventType, userId, role, request.getRequestURI(), null, ip);
     }
 
     private void sendError(HttpServletResponse response, int code, String message) throws Exception {

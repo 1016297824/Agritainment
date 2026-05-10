@@ -42,7 +42,7 @@
           <text class="menu-arrow">›</text>
         </view>
         <view class="menu-item" @tap="goJournals">
-          <text class="menu-label">游玩日志</text>
+          <text class="menu-label">朋友圈</text>
           <text class="menu-arrow">›</text>
         </view>
         <view class="menu-item" @tap="goMembership" v-if="!userInfo?.isMember">

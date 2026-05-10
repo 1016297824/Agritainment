@@ -1,7 +1,6 @@
 package com.agritainment.interceptor;
 
 import com.agritainment.enums.RoleEnum;
-import com.agritainment.service.SecurityAuditLogService;
 import com.agritainment.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -27,9 +26,6 @@ class AuthInterceptorTest {
 
     @Mock
     private JwtUtil jwtUtil;
-
-    @Mock
-    private SecurityAuditLogService auditLogService;
 
     @InjectMocks
     private AuthInterceptor authInterceptor;

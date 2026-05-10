@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +23,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,8 +37,6 @@ class DiningServiceStockTest {
     @Mock private UserService userService;
     @Mock private UserMapper userMapper;
     @Mock private NotificationService notificationService;
-    @Mock private SecurityAuditLogService securityAuditLogService;
-    @Mock private HttpServletRequest request;
 
     @InjectMocks
     private DiningService diningService;
@@ -231,30 +225,6 @@ class DiningServiceStockTest {
                     java.time.LocalDate.now(), "lunch"))
                     .isInstanceOf(AppException.class)
                     .extracting("code").isEqualTo(40403);
-        }
-
-        @Test
-        @DisplayName("黑名单用户：记录安全审计日志")
-        void blacklistedUser_logsSecurityAudit() {
-            User blacklistedUser = new User();
-            blacklistedUser.setId(1L);
-            blacklistedUser.setPhone("13800000000");
-            blacklistedUser.setIsBlacklisted(true);
-            when(userMapper.selectById(1L)).thenReturn(blacklistedUser);
-            when(request.getHeader("X-Forwarded-For")).thenReturn(null);
-            when(request.getHeader("X-Real-IP")).thenReturn(null);
-            when(request.getRemoteAddr()).thenReturn("192.168.1.100");
-
-            assertThatThrownBy(() -> diningService.createReservation(1L, 1L,
-                    java.time.LocalDate.now(), "lunch"))
-                    .isInstanceOf(AppException.class)
-                    .extracting("code").isEqualTo(40001);
-
-            verify(securityAuditLogService).logAsync(
-                    eq("BLACKLIST_BLOCKED"), eq(1L), isNull(),
-                    eq("/api/v1/dining/reservations"),
-                    contains("黑名单用户尝试预约"),
-                    eq("192.168.1.100"));
         }
     }
 }

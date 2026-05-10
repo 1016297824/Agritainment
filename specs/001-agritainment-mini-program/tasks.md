@@ -97,11 +97,11 @@
 ## Phase 9: [US7] 首页与个人中心
 
 - [x] T045 实现 Journal 实体 + JournalMapper
-- [x] T046 实现日志路由 (JournalController)
+- [x] T046 实现朋友圈路由 (JournalController)
 - [x] T047 实现前端首页 client/src/pages/index/index.vue
 - [x] T048 实现前端个人中心页面 client/src/pages/profile/index.vue
-- [x] T049 实现前端日志编辑页面 client/src/pages/profile/journal/edit.vue
-- [x] T050 实现前端日志列表组件 client/src/components/JournalCard.vue
+- [x] T049 实现前端动态编辑页面 client/src/pages/profile/journal/edit.vue
+- [x] T050 实现前端动态列表组件 client/src/components/JournalCard.vue
 - [x] T051 实现前端预约列表页面 client/src/pages/profile/reservations/index.vue
 
 ---

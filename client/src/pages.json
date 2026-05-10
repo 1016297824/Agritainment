@@ -15,14 +15,14 @@
     { "path": "pages/admin/login/index", "style": { "navigationBarTitleText": "管理员登录" } },
     { "path": "pages/login/index", "style": { "navigationBarTitleText": "登录" } },
     { "path": "pages/profile/coupons/index", "style": { "navigationBarTitleText": "我的卡包" } },
-    { "path": "pages/profile/journals/index", "style": { "navigationBarTitleText": "种植日志" } },
+    { "path": "pages/profile/journals/index", "style": { "navigationBarTitleText": "朋友圈" } },
     { "path": "pages/profile/reservations/index", "style": { "navigationBarTitleText": "我的预约" } },
     { "path": "pages/dining/order/index", "style": { "navigationBarTitleText": "扫码点餐" } },
     { "path": "pages/products/detail", "style": { "navigationBarTitleText": "产品详情" } },
     { "path": "pages/products/reservation/index", "style": { "navigationBarTitleText": "服务预约" } },
     { "path": "pages/planting/plot-detail", "style": { "navigationBarTitleText": "地块详情" } },
     { "path": "pages/planting/service-order", "style": { "navigationBarTitleText": "种植服务下单" } },
-    { "path": "pages/profile/journal/edit", "style": { "navigationBarTitleText": "编辑日志" } }
+    { "path": "pages/profile/journal/edit", "style": { "navigationBarTitleText": "编辑动态" } }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "white",

@@ -94,6 +94,69 @@ npm run dev:mp-weixin
 | 种植服务 | 6 项 | 浇水、施肥、除草、病虫害防治、采收、全托管 |
 | 会员配置 | 1 条 | 年费199元，85折，赠送采摘+钓鱼体验 |
 
+## 功能结构图
+
+```mermaid
+flowchart TD
+    subgraph CLIENT["🖥️ 前端 — Uni-app + Vue 3 小程序"]
+        direction LR
+        C1["👤 顾客端 (TabBar)<br/>—————————————<br/>首页 · 餐饮 · 产品 · 种植 · 个人中心<br/>扫码点餐 · 产品详情 · 服务预约<br/>地块详情 · 种植服务下单<br/>我的卡包 · 朋友圈 · 我的预约"]
+        C2["🧑‍💼 员工端<br/>—————————————<br/>扫码核销 · 预约管理 · 订单管理"]
+        C3["🔧 管理后台<br/>—————————————<br/>仪表盘 · 人员管理 · 业务管理 · 系统管理"]
+        C1 ~~~ C2 ~~~ C3
+    end
+
+    CLIENT ==>|"HTTP REST"| SECURITY
+
+    subgraph SECURITY["🛡️ 安全与基础设施"]
+        direction LR
+        S1["JWT 认证 + @RequireRole 权限拦截<br/>—————————————<br/>customer · staff · admin 三级角色<br/>AuthInterceptor · RoleInterceptor"]
+        S2["📋 五路日志系统（文件）<br/>—————————————<br/>system · access · business · security · error<br/>异步写入 · 敏感脱敏 · 参数截断"]
+        S1 ~~~ S2
+    end
+
+    SECURITY ==>|"校验通过"| SERVER
+
+    subgraph SERVER["⚙️ 后端 — Spring Boot REST API /api/v1"]
+        direction TB
+        subgraph R1[" "]
+            direction LR
+            SV1["🔐 AuthController<br/>登录 · 注册 · 获取用户信息 · 短信验证码"]
+            SV2["🍽️ DiningController<br/>餐桌列表 · 菜品列表 · 桌位预约 · 扫码点餐 · 结账"]
+            SV3["🛍️ ProductController<br/>产品列表 · 产品详情 · 服务预约"]
+        end
+        subgraph R2[" "]
+            direction LR
+            SV4["🌱 PlantingController<br/>地块列表 · 地块详情 · 租赁 · 摄像头 · 种植服务"]
+            SV5["🎫 CouponController<br/>卡券列表 · 扫码使用 · 转让"]
+            SV6["💎 MembershipController<br/>会员状态 · 购买会员 · 管理员开通"]
+        end
+        subgraph R3[" "]
+            direction LR
+            SV7["📝 JournalController<br/>种植日记 CRUD · 分享"]
+            SV8["🔧 AdminController<br/>仪表盘 · 用户 · 员工 · 菜品 · 产品 · 地块 · 会员配置"]
+            SV9["📁 UploadController<br/>文件上传"]
+        end
+        subgraph R4[" "]
+            direction LR
+            SV10["⏰ ScheduledTaskService<br/>库存重置 · 超时取消 · No-Show检测"]
+        end
+    end
+
+    SERVER ==>|"MyBatis-Plus ORM"| DATABASE
+
+    subgraph DATABASE["🗄️ MySQL 8.0 数据库 — 17 张表（schema.sql）"]
+        direction LR
+        D1["👤 用户域<br/>—————————<br/>users<br/>membership_configs"]
+        D2["🍽️ 餐饮域<br/>—————————<br/>tables · dishes<br/>orders · order_items<br/>table_reservations"]
+        D3["🛍️ 产品域<br/>—————————<br/>products · coupons<br/>service_reservations"]
+        D4["🌱 种植域<br/>—————————<br/>plots · cameras<br/>camera_plot_bindings<br/>camera_queue<br/>garden_services<br/>garden_service_orders<br/>journals"]
+        D1 ~~~ D2 ~~~ D3 ~~~ D4
+    end
+```
+
+> 各层自上而下串联，层内模块横向排列。CLIENT → SECURITY → SERVER → DATABASE。
+
 ## 项目结构
 
 ```
@@ -116,16 +179,24 @@ Agritainment/
 ├── server/                  # 后端 (Spring Boot)
 │   └── src/main/
 │       ├── java/.../
-│       │   ├── controller/  # 控制器
-│       │   ├── service/     # 业务逻辑
-│       │   ├── mapper/      # 数据访问
-│       │   ├── entity/      # 实体类
-│       │   ├── dto/         # 请求对象
-│       │   └── config/      # 配置类
+│       │   ├── controller/  # 控制器（9 个）
+│       │   ├── service/     # 业务逻辑（12 个）
+│       │   ├── mapper/      # MyBatis-Plus 数据访问（17 个）
+│       │   ├── entity/      # 实体类（17 个）
+│       │   ├── dto/         # 请求/响应对象
+│       │   ├── interceptor/ # 拦截器（AuthInterceptor · RoleInterceptor · LoggingInterceptor）
+│       │   ├── logging/     # AOP日志切面（BusinessLogAspect）
+│       │   ├── annotation/  # 自定义注解（@RequireRole · @BusinessLog）
+│       │   ├── enums/       # 枚举（RoleEnum 等）
+│       │   ├── common/      # 通用工具（Result · AppException · IpUtils · SensitiveDataUtils）
+│       │   ├── util/        # 工具类（JwtUtil）
+│       │   └── config/      # 配置类（WebConfig · MyBatisPlusConfig · 日志配置）
 │       └── resources/
 │           ├── application.yml
-│           ├── schema.sql
-│           └── data.sql
+│           ├── application-prod.yml
+│           ├── schema.sql    # 17 张表 DDL
+│           ├── data.sql      # 种子数据
+│           └── logback-spring.xml  # 五路日志配置
 └── specs/                   # 规格文档
 ```
 
@@ -193,6 +264,5 @@ cd client; npm run dev:h5
 
 - **异步写入**：所有文件通过 `AsyncAppender` 写入，不阻塞业务线程
 - **安全零丢失**：安全/错误日志 `discardingThreshold=0`，队列满时阻塞等待而非丢弃
-- **安全审计持久化**：认证/鉴权/黑名单事件除写入 security.log 外，同时异步写入数据库 `security_audit_log` 表，进程重启不丢失
 - **敏感数据脱敏**：手机号前3后4、openid/身份码部分隐藏、密码/验证码完全替换为 `******`
 - **参数截断**：单个日志参数超过 500 字符自动截断，防止日志膨胀
