@@ -12,6 +12,7 @@ public class Order {
     private Long id;
     private Long tableId;
     private Long userId;
+    private Long reservationId;
     private BigDecimal totalAmount;
     private String status;
     private LocalDateTime settledAt;
