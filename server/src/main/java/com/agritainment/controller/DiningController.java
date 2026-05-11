@@ -50,8 +50,10 @@ public class DiningController {
 
     @GetMapping("/reservations")
     @RequireRole({RoleEnum.CUSTOMER, RoleEnum.STAFF, RoleEnum.ADMIN})
-    public Result<List<TableReservation>> getReservations(@RequestAttribute("userId") Long userId) {
-        return Result.ok(diningService.getReservations(userId));
+    public Result<List<TableReservation>> getReservations(
+            @RequestAttribute("userId") Long userId,
+            @RequestParam(required = false) String status) {
+        return Result.ok(diningService.getReservations(userId, status));
     }
 
     @GetMapping("/orders/active")
@@ -74,7 +76,7 @@ public class DiningController {
             oi.setQuantity(input.getQuantity());
             return oi;
         }).toList();
-        return Result.ok(diningService.createOrder(userId, request.getTable_qr(), items));
+        return Result.ok(diningService.createOrder(userId, request.getTable_qr(), request.getReservation_id(), items));
     }
 
     @PostMapping("/orders/{id}/settle")

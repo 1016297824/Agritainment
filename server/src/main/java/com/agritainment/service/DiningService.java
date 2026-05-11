@@ -87,8 +87,6 @@ public class DiningService {
         reservation.setStatus("pending");
         reservationMapper.insert(reservation);
 
-        tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, tableId).set(DiningTable::getStatus, "reserved"));
-
         DiningTable table = tableMapper.selectById(tableId);
         notificationService.notifyReservationCreated(userId, table != null ? table.getTableNumber() : "", date, timeSlot);
         return reservation;
@@ -111,14 +109,17 @@ public class DiningService {
         reservationMapper.updateById(reservation);
 
         DiningTable table = tableMapper.selectById(reservation.getTableId());
-        tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, reservation.getTableId()).set(DiningTable::getStatus, "idle"));
         notificationService.notifyReservationCancelled(userId, table != null ? table.getTableNumber() : "", reservation.getReservationDate(), reservation.getTimeSlot());
         return reservation;
     }
 
-    public List<TableReservation> getReservations(Long userId) {
-        return reservationMapper.selectList(new LambdaQueryWrapper<TableReservation>()
-                .eq(TableReservation::getUserId, userId).orderByDesc(TableReservation::getReservationDate));
+    public List<TableReservation> getReservations(Long userId, String status) {
+        LambdaQueryWrapper<TableReservation> wrapper = new LambdaQueryWrapper<TableReservation>()
+                .eq(TableReservation::getUserId, userId).orderByDesc(TableReservation::getReservationDate);
+        if (status != null && !status.isBlank()) {
+            wrapper.eq(TableReservation::getStatus, status);
+        }
+        return reservationMapper.selectList(wrapper);
     }
 
     public Order getActiveOrder(String tableQr) {
@@ -136,8 +137,22 @@ public class DiningService {
     }
 
     @Transactional
-    public Order createOrder(Long userId, String tableQr, List<OrderItem> items) {
-        DiningTable table = tableMapper.selectOne(new LambdaQueryWrapper<DiningTable>().eq(DiningTable::getQrCode, tableQr));
+    public Order createOrder(Long userId, String tableQr, Long reservationId, List<OrderItem> items) {
+        DiningTable table;
+        if (reservationId != null) {
+            TableReservation reservation = reservationMapper.selectById(reservationId);
+            if (reservation == null || !"pending".equals(reservation.getStatus())) {
+                throw new AppException(40011, "预约不存在或已失效");
+            }
+            if (!reservation.getUserId().equals(userId)) {
+                throw new AppException(40403, "无权使用此预约");
+            }
+            table = tableMapper.selectById(reservation.getTableId());
+        } else if (tableQr != null && !tableQr.isBlank()) {
+            table = tableMapper.selectOne(new LambdaQueryWrapper<DiningTable>().eq(DiningTable::getQrCode, tableQr));
+        } else {
+            throw new AppException(40012, "table_qr 和 reservation_id 至少提供一个");
+        }
         if (table == null) throw new AppException(40006, "桌位不存在");
 
         Order order = orderMapper.selectOne(new LambdaQueryWrapper<Order>().eq(Order::getTableId, table.getId()).eq(Order::getStatus, "active"));
@@ -145,6 +160,9 @@ public class DiningService {
             order = new Order();
             order.setTableId(table.getId());
             order.setUserId(userId);
+            if (reservationId != null) {
+                order.setReservationId(reservationId);
+            }
             order.setTotalAmount(BigDecimal.ZERO);
             order.setStatus("active");
             orderMapper.insert(order);
@@ -200,7 +218,6 @@ public class DiningService {
         reservation.setCancelledBy(RoleEnum.STAFF.getValue());
         reservation.setIsLateCancel(isLateCancel);
         reservationMapper.updateById(reservation);
-        tableMapper.update(null, new LambdaUpdateWrapper<DiningTable>().eq(DiningTable::getId, reservation.getTableId()).set(DiningTable::getStatus, "idle"));
     }
 
     @BusinessLog("员工签到")
