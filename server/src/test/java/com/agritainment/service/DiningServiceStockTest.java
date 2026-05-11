@@ -96,7 +96,7 @@ class DiningServiceStockTest {
             when(orderItemMapper.insert(any(OrderItem.class))).thenReturn(1);
             when(orderMapper.selectById(100L)).thenReturn(new Order());
 
-            Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
+            Order result = diningService.createOrder(1L, "QR_A1", null, List.of(orderItem));
 
             assertThat(result).isNotNull();
             verify(dishMapper).updateById(any(Dish.class));
@@ -115,7 +115,7 @@ class DiningServiceStockTest {
             when(dishMapper.selectBatchIds(anyList())).thenReturn(List.of(dish));
             when(dishMapper.updateById(any(Dish.class))).thenReturn(0);
 
-            assertThatThrownBy(() -> diningService.createOrder(1L, "QR_A1", List.of(orderItem)))
+            assertThatThrownBy(() -> diningService.createOrder(1L, "QR_A1", null, List.of(orderItem)))
                     .isInstanceOf(AppException.class)
                     .extracting("code").isEqualTo(40010);
 
@@ -136,7 +136,7 @@ class DiningServiceStockTest {
             when(dishMapper.selectBatchIds(anyList())).thenReturn(List.of(dish));
             when(orderMapper.selectById(100L)).thenReturn(new Order());
 
-            Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
+            Order result = diningService.createOrder(1L, "QR_A1", null, List.of(orderItem));
 
             assertThat(result).isNotNull();
             verify(dishMapper, never()).updateById(any(Dish.class));
@@ -158,7 +158,7 @@ class DiningServiceStockTest {
             when(orderItemMapper.insert(any(OrderItem.class))).thenReturn(1);
             when(orderMapper.selectById(100L)).thenReturn(new Order());
 
-            Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
+            Order result = diningService.createOrder(1L, "QR_A1", null, List.of(orderItem));
 
             assertThat(result).isNotNull();
             verify(dishMapper, never()).updateById(any(Dish.class));
@@ -170,7 +170,7 @@ class DiningServiceStockTest {
         void tableNotFound_throwsException() {
             when(tableMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(null);
 
-            assertThatThrownBy(() -> diningService.createOrder(1L, "QR_INVALID", List.of(orderItem)))
+            assertThatThrownBy(() -> diningService.createOrder(1L, "QR_INVALID", null, List.of(orderItem)))
                     .isInstanceOf(AppException.class)
                     .extracting("code").isEqualTo(40006);
         }
@@ -190,7 +190,7 @@ class DiningServiceStockTest {
             when(orderItemMapper.insert(any(OrderItem.class))).thenReturn(1);
             when(orderMapper.selectById(100L)).thenReturn(existingOrder);
 
-            Order result = diningService.createOrder(1L, "QR_A1", List.of(orderItem));
+            Order result = diningService.createOrder(1L, "QR_A1", null, List.of(orderItem));
 
             assertThat(result).isNotNull();
             verify(orderMapper, never()).insert(any());
