@@ -1,6 +1,6 @@
-files,language,blank,comment,code,"github.com/AlDanial/cloc v 2.08  T=0.74 s (216.5 files/s 14437.9 lines/s)"
-112,Java,957,0,4924
-30,Vuejs Component,247,0,2946
-17,JavaScript,188,40,1209
+files,language,blank,comment,code,"github.com/AlDanial/cloc v 2.08  T=0.75 s (215.9 files/s 15231.3 lines/s)"
+112,Java,956,0,4944
+30,Vuejs Component,250,0,3086
+19,JavaScript,253,40,1741
 1,TypeScript,14,70,74
-160,SUM,1406,110,9153
+162,SUM,1473,110,9845
