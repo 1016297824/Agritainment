@@ -20,9 +20,8 @@ export const useDiningStore = defineStore('dining', {
       if (state.currentReservation.status !== 'pending') return false
       const today = new Date()
       today.setHours(0, 0, 0, 0)
-      const reservationDate = new Date(state.currentReservation.reservationDate)
-      reservationDate.setHours(0, 0, 0, 0)
-      return reservationDate >= today
+      const todayStr = today.toISOString().split('T')[0]
+      return state.currentReservation.reservationDate >= todayStr
     }
   },
   actions: {
@@ -64,11 +63,8 @@ export const useDiningStore = defineStore('dining', {
         const reservations = await diningApi.getReservations('pending')
         const today = new Date()
         today.setHours(0, 0, 0, 0)
-        this.currentReservation = reservations.find(r => {
-          const d = new Date(r.reservationDate)
-          d.setHours(0, 0, 0, 0)
-          return d >= today
-        }) || null
+        const todayStr = today.toISOString().split('T')[0]
+        this.currentReservation = reservations.find(r => r.reservationDate >= todayStr) || null
       } catch (e) {
         console.error('fetchReservation error:', e)
       }
