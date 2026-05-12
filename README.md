@@ -12,6 +12,14 @@
 | 认证 | JWT (JJWT) |
 | 文件存储 | 服务器本地 |
 
+## 效果图
+
+### 登录模块 — 未登录 → 登录 → 已登录
+
+| 未登录「我的」页 | 登录页 | 已登录「我的」页 |
+|:---:|:---:|:---:|
+| ![未登录-我的页面](docs/images/profile-not-logged-in.png) | ![登录页面](docs/images/login-page.png) | ![已登录-我的页面](docs/images/profile-logged-in.png) |
+
 ## 环境要求
 
 - JDK >= 21
