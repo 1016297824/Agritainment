@@ -1,14 +1,20 @@
 <template>
   <view class="custom-tabbar">
-    <view
-      v-for="(tab, i) in tabs"
-      :key="tab.pagePath"
-      class="tab-item"
-      :class="{ active: i === current }"
-      @tap="switchTab(tab.pagePath, i)"
-    >
-      <image class="tab-icon" :src="i === current ? tab.activeIcon : tab.icon" mode="aspectFit" />
-      <text class="tab-text">{{ tab.text }}</text>
+    <view class="tabbar-bg" />
+    <view class="tabbar-inner">
+      <view
+        v-for="(tab, i) in tabs"
+        :key="tab.pagePath"
+        class="tab-item"
+        :class="{ active: i === current }"
+        @tap="switchTab(tab.pagePath, i)"
+      >
+        <view class="tab-icon-wrap">
+          <view v-if="i === current" class="active-glow" />
+          <image class="tab-icon" :src="i === current ? tab.activeIcon : tab.icon" mode="aspectFit" />
+        </view>
+        <text class="tab-text">{{ tab.text }}</text>
+      </view>
     </view>
   </view>
 </template>
@@ -59,22 +65,87 @@ const switchTab = (path, index) => {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100rpx;
-  background: #fff;
-  border-top: 1rpx solid #e5e7eb;
-  display: flex;
   z-index: 999;
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+.tabbar-bg {
+  position: absolute;
+  top: 0;
+  left: 16rpx;
+  right: 16rpx;
+  bottom: 0;
+  background: #FFFFFF;
+  border-radius: 28rpx 28rpx 0 0;
+  box-shadow: 0 -6rpx 32rpx rgba(20, 83, 45, 0.08), 0 -2rpx 8rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid rgba(20, 83, 45, 0.06);
+  border-bottom: none;
+}
+
+.tabbar-inner {
+  position: relative;
+  display: flex;
+  height: 104rpx;
+  padding: 8rpx 8rpx 0;
+}
+
 .tab-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4rpx;
+  gap: 6rpx;
+  min-height: 88rpx;
+  position: relative;
+  transition: transform 0.2s ease;
 }
-.tab-icon { width: 48rpx; height: 48rpx; }
-.tab-text { font-size: 20rpx; color: #6b7280; }
-.tab-item.active .tab-text { color: #15803d; font-weight: 600; }
+
+.tab-item:active {
+  transform: scale(0.94);
+}
+
+.tab-icon-wrap {
+  position: relative;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-glow {
+  position: absolute;
+  top: -4rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(21, 128, 61, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
+  transition: transform 0.2s ease;
+}
+
+.tab-item.active .tab-icon {
+  transform: scale(1.1);
+}
+
+.tab-text {
+  font-size: 20rpx;
+  font-weight: 400;
+  color: #9CA3AF;
+  letter-spacing: 1rpx;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.tab-item.active .tab-text {
+  color: #15803D;
+  font-weight: 600;
+}
 </style>
